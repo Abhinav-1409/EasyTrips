@@ -18,7 +18,7 @@ const Dashboard = () => {
     {
       id: 1,
       name: "Bali Paradise Escape",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       startDate: "2023-08-15",
       endDate: "2023-08-22",
       status: "Confirmed",
@@ -27,7 +27,7 @@ const Dashboard = () => {
     {
       id: 2,
       name: "Swiss Alps Adventure",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       startDate: "2023-09-10",
       endDate: "2023-09-18",
       status: "Pending Payment",
@@ -40,7 +40,7 @@ const Dashboard = () => {
     {
       id: 1,
       name: "Tokyo City Explorer",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1599,
       duration: "6 days",
       rating: 4.7,
@@ -48,7 +48,7 @@ const Dashboard = () => {
     {
       id: 2,
       name: "Egyptian Wonders",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1499,
       duration: "9 days",
       rating: 4.6,
@@ -56,7 +56,7 @@ const Dashboard = () => {
     {
       id: 3,
       name: "Santorini Getaway",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1299,
       duration: "5 days",
       rating: 4.9,
@@ -64,7 +64,7 @@ const Dashboard = () => {
     {
       id: 4,
       name: "Amazon Rainforest Expedition",
-      image: "/placeholder.svg?height=150&width=250",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1799,
       duration: "7 days",
       rating: 4.5,
@@ -90,8 +90,8 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-600 font-medium">Upcoming Trips</p>
-                <p className="text-2xl font-bold text-blue-700">{user.upcomingTrips}</p>
+                <p className="text-sm text-blue-500 font-medium">Upcoming Trips</p>
+                <p className="text-2xl font-bold text-blue-600">{user.upcomingTrips}</p>
               </div>
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-green-600 font-medium">Completed Trips</p>
@@ -169,7 +169,7 @@ const Dashboard = () => {
                 <p className="text-gray-600">You don't have any upcoming trips.</p>
                 <Link
                   to="/browse"
-                  className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
+                  className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600"
                 >
                   Browse Packages
                 </Link>
@@ -200,10 +200,10 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-blue-600">${pkg.price}</span>
+                      <span className="text-xl font-bold text-blue-500">${pkg.price}</span>
                       <Link
                         to={`/package/${pkg.id}`}
-                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition duration-300"
+                        className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition duration-300"
                       >
                         View Details
                       </Link>
@@ -216,7 +216,7 @@ const Dashboard = () => {
             <div className="mt-6 text-center">
               <Link
                 to="/browse"
-                className="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition duration-300"
+                className="inline-block px-6 py-3 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition duration-300"
               >
                 Explore More Packages
               </Link>

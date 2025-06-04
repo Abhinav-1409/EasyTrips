@@ -27,7 +27,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-2xl font-bold text-blue-600">
+              <Link to="/" className="text-2xl font-bold text-blue-500">
                 TourEase
               </Link>
             </div>
@@ -35,17 +35,17 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600">
+            <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
               <span className="flex items-center">
                 <span className="mr-1">🏠</span> Home
               </span>
             </Link>
-            <Link to="/browse" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600">
+            <Link to="/browse" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
               <span className="flex items-center">
                 <span className="mr-1">🧳</span> Browse Packages
               </span>
             </Link>
-            <Link to="/help" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600">
+            <Link to="/help" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
               <span className="flex items-center">
                 <span className="mr-1">📞</span> Help
               </span>
@@ -54,7 +54,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             {isAuthenticated ? (
               <div className="relative ml-3">
                 <div className="flex items-center space-x-4">
-                  <Link to="/notifications" className="text-gray-700 hover:text-blue-600">
+                  <Link to="/notifications" className="text-gray-700 hover:text-blue-500">
                     <span className="relative">
                       <span>🔔</span>
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
@@ -65,7 +65,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
                   <button
                     onClick={toggleProfile}
-                    className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 focus:outline-none"
+                    className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-500 focus:outline-none"
                   >
                     <span className="mr-1">👤</span>
                     <span>Profile</span>
@@ -99,13 +99,13 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
               <div className="flex items-center space-x-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-blue-600 border border-blue-600 hover:bg-blue-50"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-blue-500 border border-blue-600 hover:bg-blue-100"
                 >
                   Signup
                 </Link>
@@ -127,7 +127,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             )}
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-500 focus:outline-none"
             >
               <svg
                 className="h-6 w-6"
@@ -151,14 +151,14 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600">
+            <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500">
               <span className="flex items-center">
                 <span className="mr-1">🏠</span> Home
               </span>
             </Link>
             <Link
               to="/browse"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
             >
               <span className="flex items-center">
                 <span className="mr-1">🧳</span> Browse Packages
@@ -166,7 +166,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             </Link>
             <Link
               to="/help"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
             >
               <span className="flex items-center">
                 <span className="mr-1">📞</span> Help
@@ -177,31 +177,31 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
               <>
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
                 >
                   Profile / Account
                 </Link>
                 <Link
                   to="/orders"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
                 >
                   My Orders
                 </Link>
                 <Link
                   to="/saved"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
                 >
                   Saved
                 </Link>
                 <Link
                   to="/wishlist"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
                 >
                   Wishlist
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600"
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-500"
                 >
                   <span className="mr-1">🚪</span> Logout
                 </button>
@@ -210,13 +210,13 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
               <div className="flex flex-col space-y-2 px-3 py-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 text-center"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 text-center"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-blue-600 border border-blue-600 hover:bg-blue-50 text-center"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-blue-500 border border-blue-600 hover:bg-blue-100 text-center"
                 >
                   Signup
                 </Link>

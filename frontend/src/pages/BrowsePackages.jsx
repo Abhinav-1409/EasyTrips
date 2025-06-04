@@ -11,7 +11,7 @@ const BrowsePackages = () => {
     {
       id: 1,
       name: "Bali Paradise Escape",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1299,
       duration: "7 days",
       rating: 4.8,
@@ -22,7 +22,7 @@ const BrowsePackages = () => {
     {
       id: 2,
       name: "Swiss Alps Adventure",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1899,
       duration: "8 days",
       rating: 4.9,
@@ -33,7 +33,7 @@ const BrowsePackages = () => {
     {
       id: 3,
       name: "Tokyo City Explorer",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1599,
       duration: "6 days",
       rating: 4.7,
@@ -44,7 +44,7 @@ const BrowsePackages = () => {
     {
       id: 4,
       name: "Egyptian Wonders",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1499,
       duration: "9 days",
       rating: 4.6,
@@ -55,7 +55,7 @@ const BrowsePackages = () => {
     {
       id: 5,
       name: "Santorini Getaway",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1299,
       duration: "5 days",
       rating: 4.9,
@@ -66,7 +66,7 @@ const BrowsePackages = () => {
     {
       id: 6,
       name: "Amazon Rainforest Expedition",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 1799,
       duration: "7 days",
       rating: 4.5,
@@ -77,7 +77,7 @@ const BrowsePackages = () => {
     {
       id: 7,
       name: "New York Weekend",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 899,
       duration: "3 days",
       rating: 4.4,
@@ -88,7 +88,7 @@ const BrowsePackages = () => {
     {
       id: 8,
       name: "Safari in Tanzania",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/lukhnow.jpg?height=200&width=300",
       price: 2499,
       duration: "10 days",
       rating: 4.9,
@@ -401,7 +401,7 @@ const BrowsePackages = () => {
                           <span className="text-xl font-bold text-blue-600">${pkg.price}</span>
                           <Link
                             to={`/package/${pkg.id}`}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                           >
                             View Details
                           </Link>
@@ -424,7 +424,7 @@ const BrowsePackages = () => {
                       })
                       setSearchQuery("")
                     }}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+                    className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                   >
                     Reset Filters
                   </button>

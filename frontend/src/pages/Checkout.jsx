@@ -12,7 +12,7 @@ const Checkout = () => {
   const packageDetails = {
     id: 2,
     name: "Swiss Alps Adventure",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/lukhnow.jpg?height=200&width=300",
     basePrice: 1899,
     duration: "8 days",
     startDate: "2023-09-10",
