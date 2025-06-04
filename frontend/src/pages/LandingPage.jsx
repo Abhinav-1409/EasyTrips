@@ -102,7 +102,6 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar isAuthenticated={false} />
-
       {/* Hero Section */}
       {/* <section className="bg-gradient-to-r from-blue-400 to-purple-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -195,10 +194,10 @@ const LandingPage = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xl font-bold text-blue-500">
-                      ${pkg.price}
+                      ₹{pkg.price}
                     </span>
                     <Link
-                      to={`/package/${pkg.id}`}
+                      to={`/package/₹{pkg.id}`}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-purple-500 transition duration-300"
                     >
                       View Details
@@ -240,7 +239,7 @@ const LandingPage = () => {
             </div>
             <div className="text-center p-6 bg-white rounded-lg shadow-md">
               <div className="text-4xl mb-4 text-blue-500 flex justify-center">
-                💰
+                ₹
               </div>
               <h3 className="text-xl font-semibold mb-3">
                 Best Price Guarantee

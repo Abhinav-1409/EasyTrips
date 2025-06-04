@@ -106,7 +106,7 @@ const Signup = ({ onSignup }) => {
                   type="text"
                   autoComplete="name"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 border ${
+                  className={`appearance-none relative block w-full px-3 py-2 border ₹{
                     errors.fullName ? "border-red-300" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Full Name"
@@ -126,7 +126,7 @@ const Signup = ({ onSignup }) => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 border ${
+                  className={`appearance-none relative block w-full px-3 py-2 border ₹{
                     errors.email ? "border-red-300" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Email address"
@@ -146,7 +146,7 @@ const Signup = ({ onSignup }) => {
                   type="text"
                   autoComplete="username"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 border ${
+                  className={`appearance-none relative block w-full px-3 py-2 border ₹{
                     errors.username ? "border-red-300" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Username"
@@ -166,7 +166,7 @@ const Signup = ({ onSignup }) => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 border ${
+                  className={`appearance-none relative block w-full px-3 py-2 border ₹{
                     errors.password ? "border-red-300" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Password"
@@ -186,7 +186,7 @@ const Signup = ({ onSignup }) => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 border ${
+                  className={`appearance-none relative block w-full px-3 py-2 border ₹{
                     errors.confirmPassword ? "border-red-300" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Confirm Password"
@@ -202,7 +202,7 @@ const Signup = ({ onSignup }) => {
                 id="agree-terms"
                 name="agreeTerms"
                 type="checkbox"
-                className={`h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded ${
+                className={`h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded ₹{
                   errors.agreeTerms ? "border-red-300" : ""
                 }`}
                 checked={formData.agreeTerms}

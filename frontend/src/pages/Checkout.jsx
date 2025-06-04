@@ -125,42 +125,42 @@ const Checkout = () => {
                   <div className="border-t border-gray-200 pt-4 mb-4">
                     <div className="flex justify-between mb-2">
                       <span className="text-gray-600">
-                        Base Price ({packageDetails.travelers} x ${packageDetails.basePrice})
+                        Base Price ({packageDetails.travelers} x ₹{packageDetails.basePrice})
                       </span>
-                      <span>${pricing.basePrice}</span>
+                      <span>₹{pricing.basePrice}</span>
                     </div>
 
                     {addOns.insurance && (
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-600">Travel Insurance</span>
-                        <span>${pricing.insurance}</span>
+                        <span>₹{pricing.insurance}</span>
                       </div>
                     )}
 
                     {addOns.airportTransfer && (
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-600">Airport Transfer</span>
-                        <span>${pricing.airportTransfer}</span>
+                        <span>₹{pricing.airportTransfer}</span>
                       </div>
                     )}
 
                     {addOns.guidedTour && (
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-600">Private Guided Tour</span>
-                        <span>${pricing.guidedTour}</span>
+                        <span>₹{pricing.guidedTour}</span>
                       </div>
                     )}
 
                     <div className="flex justify-between mb-2">
                       <span className="text-gray-600">Tax (8%)</span>
-                      <span>${pricing.tax}</span>
+                      <span>₹{pricing.tax}</span>
                     </div>
                   </div>
 
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total</span>
-                      <span>${totalPrice}</span>
+                      <span>₹{totalPrice}</span>
                     </div>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ const Checkout = () => {
                         <p className="text-gray-500 text-sm">
                           Comprehensive coverage for trip cancellation, medical emergencies, and more.
                         </p>
-                        <p className="text-gray-700 font-medium">$99 per traveler</p>
+                        <p className="text-gray-700 font-medium">₹99 per traveler</p>
                       </div>
                     </div>
 
@@ -215,7 +215,7 @@ const Checkout = () => {
                         <p className="text-gray-500 text-sm">
                           Comfortable private transfer from airport to hotel and back.
                         </p>
-                        <p className="text-gray-700 font-medium">$49</p>
+                        <p className="text-gray-700 font-medium">₹49</p>
                       </div>
                     </div>
 
@@ -237,7 +237,7 @@ const Checkout = () => {
                         <p className="text-gray-500 text-sm">
                           Exclusive guided tour with a local expert for a more personalized experience.
                         </p>
-                        <p className="text-gray-700 font-medium">$199</p>
+                        <p className="text-gray-700 font-medium">₹199</p>
                       </div>
                     </div>
                   </div>
@@ -497,7 +497,7 @@ const Checkout = () => {
                     type="submit"
                     className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    Complete Booking - ${totalPrice}
+                    Complete Booking - ₹{totalPrice}
                   </button>
                 </div>
               </form>

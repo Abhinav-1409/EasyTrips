@@ -252,10 +252,10 @@ const BrowsePackages = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Any Price</option>
-                      <option value="0-1000">Under $1,000</option>
-                      <option value="1000-1500">$1,000 - $1,500</option>
-                      <option value="1500-2000">$1,500 - $2,000</option>
-                      <option value="2000-">$2,000+</option>
+                      <option value="0-1000">Under ₹2000</option>
+                      <option value="1000-1500">₹2,000 - ₹3,000</option>
+                      <option value="1500-2000">₹3,500 - ₹5,000</option>
+                      <option value="2000-">₹5,000+</option>
                     </select>
                   </div>
 
@@ -400,7 +400,7 @@ const BrowsePackages = () => {
                         <div className="flex justify-between items-center">
                           <span className="text-xl font-bold text-blue-600">${pkg.price}</span>
                           <Link
-                            to={`/package/${pkg.id}`}
+                            to={`/package/₹{pkg.id}`}
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                           >
                             View Details

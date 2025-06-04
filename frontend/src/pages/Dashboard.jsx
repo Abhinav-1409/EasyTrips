@@ -128,7 +128,7 @@ const Dashboard = () => {
                         <div className="flex justify-between items-start">
                           <h3 className="text-lg font-semibold text-gray-900">{booking.name}</h3>
                           <span
-                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ₹{
                               booking.status === "Confirmed"
                                 ? "bg-green-100 text-green-800"
                                 : "bg-yellow-100 text-yellow-800"
@@ -141,18 +141,18 @@ const Dashboard = () => {
                           {formatDate(booking.startDate)} - {formatDate(booking.endDate)}
                         </p>
                         <p className="mt-1 text-gray-600">
-                          <span className="font-semibold">${booking.price}</span> total
+                          <span className="font-semibold">₹{booking.price}</span> total
                         </p>
                         <div className="mt-4 flex space-x-3">
                           <Link
-                            to={`/orders/${booking.id}`}
+                            to={`/orders/₹{booking.id}`}
                             className="text-sm font-medium text-blue-600 hover:text-blue-500"
                           >
                             View Details
                           </Link>
                           {booking.status === "Pending Payment" && (
                             <Link
-                              to={`/checkout/${booking.id}`}
+                              to={`/checkout/₹{booking.id}`}
                               className="text-sm font-medium text-green-600 hover:text-green-500"
                             >
                               Complete Payment
@@ -200,9 +200,9 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-blue-500">${pkg.price}</span>
+                      <span className="text-xl font-bold text-blue-500">₹{pkg.price}</span>
                       <Link
-                        to={`/package/${pkg.id}`}
+                        to={`/package/₹{pkg.id}`}
                         className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition duration-300"
                       >
                         View Details

@@ -70,7 +70,7 @@ const Profile = ({ onLogout }) => {
               <nav className="flex -mb-px">
                 <button
                   onClick={() => setActiveTab("profile")}
-                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                     activeTab === "profile"
                       ? "border-blue-500 text-blue-600"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -80,7 +80,7 @@ const Profile = ({ onLogout }) => {
                 </button>
                 <button
                   onClick={() => setActiveTab("insights")}
-                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                     activeTab === "insights"
                       ? "border-blue-500 text-blue-600"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -268,7 +268,7 @@ const Profile = ({ onLogout }) => {
                   </div>
                   <div className="bg-green-50 p-4 rounded-lg">
                     <p className="text-sm text-green-600 font-medium">Total Spent</p>
-                    <p className="text-2xl font-bold text-green-700">${tripData.totalSpent}</p>
+                    <p className="text-2xl font-bold text-green-700">₹{tripData.totalSpent}</p>
                   </div>
                   <div className="bg-purple-50 p-4 rounded-lg">
                     <p className="text-sm text-purple-600 font-medium">Favorite Category</p>
@@ -276,7 +276,7 @@ const Profile = ({ onLogout }) => {
                   </div>
                   <div className="bg-pink-50 p-4 rounded-lg">
                     <p className="text-sm text-pink-600 font-medium">Money Saved</p>
-                    <p className="text-2xl font-bold text-pink-700">${tripData.moneySaved}</p>
+                    <p className="text-2xl font-bold text-pink-700">₹{tripData.moneySaved}</p>
                   </div>
                 </div>
 
@@ -294,7 +294,7 @@ const Profile = ({ onLogout }) => {
                           <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div
                               className="bg-blue-600 h-2.5 rounded-full"
-                              style={{ width: `${(item.count / tripData.totalTrips) * 100}%` }}
+                              style={{ width: `₹{(item.count / tripData.totalTrips) * 100}%` }}
                             ></div>
                           </div>
                         </div>
@@ -316,7 +316,7 @@ const Profile = ({ onLogout }) => {
                               left: 0,
                               width: "100%",
                               height: "100%",
-                              clipPath: `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.cos((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)`,
+                              clipPath: `polygon(50% 50%, 50% 0%, ₹{50 + 50 * Math.cos((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)`,
                             }}
                           ></div>
                           <div
@@ -326,7 +326,7 @@ const Profile = ({ onLogout }) => {
                               left: 0,
                               width: "100%",
                               height: "100%",
-                              clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}%, ${50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}%, 100% 100%, 0% 100%)`,
+                              clipPath: `polygon(50% 50%, ₹{50 + 50 * Math.cos((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin((tripData.popularDestinations[0].percentage * 3.6 * Math.PI) / 180)}%, ₹{50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}%, 100% 100%, 0% 100%)`,
                             }}
                           ></div>
                           <div
@@ -336,7 +336,7 @@ const Profile = ({ onLogout }) => {
                               left: 0,
                               width: "100%",
                               height: "100%",
-                              clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}%, ${50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}%, 0% 100%)`,
+                              clipPath: `polygon(50% 50%, ₹{50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage) * 3.6 * Math.PI) / 180)}%, ₹{50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}%, 0% 100%)`,
                             }}
                           ></div>
                           <div
@@ -346,7 +346,7 @@ const Profile = ({ onLogout }) => {
                               left: 0,
                               width: "100%",
                               height: "100%",
-                              clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}% ${50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}%, 0% 0%)`,
+                              clipPath: `polygon(50% 50%, ₹{50 + 50 * Math.cos(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}% ₹{50 - 50 * Math.sin(((tripData.popularDestinations[0].percentage + tripData.popularDestinations[1].percentage + tripData.popularDestinations[2].percentage) * 3.6 * Math.PI) / 180)}%, 0% 0%)`,
                             }}
                           ></div>
                         </div>
@@ -359,7 +359,7 @@ const Profile = ({ onLogout }) => {
                       {tripData.popularDestinations.map((item, index) => (
                         <div key={index} className="flex items-center">
                           <div
-                            className={`w-3 h-3 rounded-full mr-2 ${
+                            className={`w-3 h-3 rounded-full mr-2 ₹{
                               index === 0
                                 ? "bg-blue-500"
                                 : index === 1

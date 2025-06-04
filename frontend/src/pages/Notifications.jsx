@@ -39,7 +39,7 @@ const Notifications = () => {
       id: 4,
       type: "status",
       title: "Payment Successful",
-      message: "Your payment of $1899 for Swiss Alps Adventure has been processed successfully.",
+      message: "Your payment of ₹1899 for Swiss Alps Adventure has been processed successfully.",
       date: "2023-07-10T16:20:00",
       isRead: true,
       link: "/orders/2",
@@ -89,7 +89,7 @@ const Notifications = () => {
     } else if (diffDays === 1) {
       return "Yesterday"
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`
+      return `₹{diffDays} days ago`
     } else {
       return date.toLocaleDateString()
     }
@@ -193,7 +193,7 @@ const Notifications = () => {
                 {notifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className={`p-4 hover:bg-gray-50 ${notification.isRead ? "" : "bg-blue-50"}`}
+                    className={`p-4 hover:bg-gray-50 ₹{notification.isRead ? "" : "bg-blue-50"}`}
                   >
                     <Link
                       to={notification.link}
@@ -205,7 +205,7 @@ const Notifications = () => {
                         <div className="flex justify-between items-start">
                           <div>
                             <p
-                              className={`text-sm font-medium ${notification.isRead ? "text-gray-900" : "text-blue-600"}`}
+                              className={`text-sm font-medium ₹{notification.isRead ? "text-gray-900" : "text-blue-600"}`}
                             >
                               {notification.title}
                             </p>

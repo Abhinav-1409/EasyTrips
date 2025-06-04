@@ -68,7 +68,7 @@ const MyOrders = () => {
   // Download invoice
   const downloadInvoice = (orderId) => {
     // In a real app, this would generate and download an invoice
-    alert(`Downloading invoice for order #${orderId}...`)
+    alert(`Downloading invoice for order #₹{orderId}...`)
   }
 
   return (
@@ -99,7 +99,7 @@ const MyOrders = () => {
                           <div>
                             <div className="flex items-center">
                               <h3 className="text-lg font-semibold text-gray-900 mr-3">{order.packageName}</h3>
-                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${statusInfo.color}`}>
+                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ₹{statusInfo.color}`}>
                                 {statusInfo.label}
                               </span>
                             </div>
@@ -112,12 +112,12 @@ const MyOrders = () => {
                               {formatDate(order.endDate)}
                             </p>
                             <p className="text-gray-600">
-                              <span className="font-medium">Total Amount:</span> ${order.totalAmount}
+                              <span className="font-medium">Total Amount:</span> ₹{order.totalAmount}
                             </p>
 
                             <div className="mt-4 flex flex-wrap gap-2">
                               <Link
-                                to={`/orders/${order.id}`}
+                                to={`/orders/₹{order.id}`}
                                 className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
                               >
                                 View Details
@@ -132,7 +132,7 @@ const MyOrders = () => {
 
                               {order.status === "completed" && !order.hasFeedback && (
                                 <Link
-                                  to={`/feedback/${order.id}`}
+                                  to={`/feedback/₹{order.id}`}
                                   className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
                                 >
                                   Leave Feedback
@@ -147,7 +147,7 @@ const MyOrders = () => {
                               <div className="relative">
                                 <div className="flex items-center">
                                   <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center ₹{
                                       order.status !== "cancelled" ? "bg-green-500 text-white" : "bg-gray-300"
                                     }`}
                                   >
@@ -160,14 +160,14 @@ const MyOrders = () => {
                                     </svg>
                                   </div>
                                   <div
-                                    className={`w-16 h-1 ${
+                                    className={`w-16 h-1 ₹{
                                       ["in-progress", "completed"].includes(order.status)
                                         ? "bg-green-500"
                                         : "bg-gray-300"
                                     }`}
                                   ></div>
                                   <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center ₹{
                                       ["in-progress", "completed"].includes(order.status)
                                         ? "bg-green-500 text-white"
                                         : "bg-gray-300"
@@ -182,12 +182,12 @@ const MyOrders = () => {
                                     </svg>
                                   </div>
                                   <div
-                                    className={`w-16 h-1 ${
+                                    className={`w-16 h-1 ₹{
                                       order.status === "completed" ? "bg-green-500" : "bg-gray-300"
                                     }`}
                                   ></div>
                                   <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center ₹{
                                       order.status === "completed" ? "bg-green-500 text-white" : "bg-gray-300"
                                     }`}
                                   >

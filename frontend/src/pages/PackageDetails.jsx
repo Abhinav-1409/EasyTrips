@@ -191,7 +191,7 @@ const PackageDetails = () => {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <svg
                         key={star}
-                        className={`w-5 h-5 ${
+                        className={`w-5 h-5 ₹{
                           star <= Math.round(packageData.rating) ? "text-yellow-400" : "text-gray-300"
                         }`}
                         fill="currentColor"
@@ -207,7 +207,7 @@ const PackageDetails = () => {
                 </div>
               </div>
               <div className="mt-4 md:mt-0">
-                <span className="text-3xl font-bold text-blue-600">${packageData.price}</span>
+                <span className="text-3xl font-bold text-blue-600">₹{packageData.price}</span>
                 <span className="text-gray-600 ml-2">per person</span>
               </div>
             </div>
@@ -221,7 +221,7 @@ const PackageDetails = () => {
                 <div className="relative h-96">
                   <img
                     src={packageData.images[activeImage] || "/placeholder.svg"}
-                    alt={`${packageData.name} - Image ${activeImage + 1}`}
+                    alt={`₹{packageData.name} - Image ₹{activeImage + 1}`}
                     className="w-full h-full object-cover"
                   />
 
@@ -259,7 +259,7 @@ const PackageDetails = () => {
                       <button
                         key={index}
                         onClick={() => setActiveImage(index)}
-                        className={`flex-shrink-0 w-20 h-20 m-1 rounded overflow-hidden ${
+                        className={`flex-shrink-0 w-20 h-20 m-1 rounded overflow-hidden ₹{
                           activeImage === index ? "ring-2 ring-blue-500" : ""
                         }`}
                       >
@@ -276,7 +276,7 @@ const PackageDetails = () => {
                   <nav className="flex -mb-px">
                     <button
                       onClick={() => setActiveTab("overview")}
-                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                         activeTab === "overview"
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -286,7 +286,7 @@ const PackageDetails = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab("itinerary")}
-                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                         activeTab === "itinerary"
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -296,7 +296,7 @@ const PackageDetails = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab("included")}
-                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                         activeTab === "included"
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -306,7 +306,7 @@ const PackageDetails = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab("reviews")}
-                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ₹{
                         activeTab === "reviews"
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -402,7 +402,7 @@ const PackageDetails = () => {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <svg
                               key={star}
-                              className={`w-5 h-5 ${
+                              className={`w-5 h-5 ₹{
                                 star <= Math.round(packageData.rating) ? "text-yellow-400" : "text-gray-300"
                               }`}
                               fill="currentColor"
@@ -435,7 +435,7 @@ const PackageDetails = () => {
                                   {[1, 2, 3, 4, 5].map((star) => (
                                     <svg
                                       key={star}
-                                      className={`w-4 h-4 ${
+                                      className={`w-4 h-4 ₹{
                                         star <= review.rating ? "text-yellow-400" : "text-gray-300"
                                       }`}
                                       fill="currentColor"
@@ -502,7 +502,7 @@ const PackageDetails = () => {
                     <div className="border-t border-gray-200 pt-4">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-600">Price per person</span>
-                        <span>${packageData.price}</span>
+                        <span>₹{packageData.price}</span>
                       </div>
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-600">Travelers</span>
@@ -510,14 +510,14 @@ const PackageDetails = () => {
                       </div>
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
                         <span>Total</span>
-                        <span>${calculateTotalPrice()}</span>
+                        <span>₹{calculateTotalPrice()}</span>
                       </div>
                     </div>
 
                     <div className="space-y-3">
                       <Link
-                        to={`/checkout?package=${packageData.id}&date=${bookingData.startDate}&travelers=${bookingData.travelers}`}
-                        className={`w-full px-4 py-2 bg-blue-600 text-white text-center font-medium rounded-md hover:bg-blue-700 transition duration-300 block ${
+                        to={`/checkout?package=₹{packageData.id}&date=₹{bookingData.startDate}&travelers=₹{bookingData.travelers}`}
+                        className={`w-full px-4 py-2 bg-blue-600 text-white text-center font-medium rounded-md hover:bg-blue-700 transition duration-300 block ₹{
                           !bookingData.startDate ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                         onClick={(e) => {
@@ -533,7 +533,7 @@ const PackageDetails = () => {
                       <div className="flex space-x-2">
                         <button
                           onClick={toggleWishlist}
-                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ${
+                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
                             isInWishlist
                               ? "bg-red-50 text-red-600 border-red-600"
                               : "border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -559,7 +559,7 @@ const PackageDetails = () => {
 
                         <button
                           onClick={toggleSaved}
-                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ${
+                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
                             isInSaved
                               ? "bg-blue-50 text-blue-600 border-blue-600"
                               : "border-gray-300 text-gray-700 hover:bg-gray-50"

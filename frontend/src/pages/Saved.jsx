@@ -53,7 +53,7 @@ const Saved = () => {
   // Proceed to checkout
   const proceedToCheckout = (id) => {
     // Navigate to checkout page with the package id
-    window.location.href = `/checkout?package=${id}`
+    window.location.href = `/checkout?package=₹{id}`
   }
 
   return (
@@ -90,7 +90,7 @@ const Saved = () => {
                           <p className="text-gray-600">Best time to visit: {item.bestTime}</p>
                         </div>
                         <div className="mt-4 md:mt-0 text-right">
-                          <p className="text-2xl font-bold text-blue-600 mb-4">${item.price}</p>
+                          <p className="text-2xl font-bold text-blue-600 mb-4">₹{item.price}</p>
                           <div className="flex flex-col space-y-2">
                             <button
                               onClick={() => proceedToCheckout(item.id)}

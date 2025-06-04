@@ -95,7 +95,7 @@ const Wishlist = () => {
                     </div>
                     <div className="text-sm text-gray-600 mb-3">Best time: {item.bestTime}</div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-blue-600">${item.price}</span>
+                      <span className="text-xl font-bold text-blue-600">₹{item.price}</span>
                       <div className="flex space-x-2">
                         <button
                           onClick={() => moveToSaved(item.id)}
@@ -104,7 +104,7 @@ const Wishlist = () => {
                           Save for Later
                         </button>
                         <Link
-                          to={`/package/${item.id}`}
+                          to={`/package/₹{item.id}`}
                           className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
                         >
                           View Details
