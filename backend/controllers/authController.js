@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Profile = require("../models/profile");
 
 const dotenv = require("dotenv");
 // const { handleCreateProfile } = require("./profileController");
@@ -10,8 +11,8 @@ const sendEmail = require("../utils/sendEmail");
 
 exports.signup = async (req, res) => {
   try {
-    const { username, email, password, name } = req.body;
-    if (!username || !email || !password) {
+    const { email, password, fullName } = req.body;
+    if (!email || !password) {
       return res.status(400).json({
         message: "Please fill all fields or kindly try different username",
       });
@@ -19,24 +20,25 @@ exports.signup = async (req, res) => {
     if (!email.includes("@")) {
       return res.status(400).json({ message: "Please enter a valid email" });
     }
-    const existingUsername = await User.findOne({ userName: username });
     const existingEmail = await User.findOne({ email });
-    if (existingUsername || existingEmail) {
+    if (existingEmail) {
       return res.status(400).json({
         success: false,
-        message: existingEmail
-          ? "Email already exists"
-          : "Username already exists",
+        message: "Email already exists"
       });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
-      name: name,
-      userName: username,
+      name: fullName,
       email: email,
       password: hashedPassword,
     });
-   //  handleCreateProfile(user._id);
+    // Create a profile for the user
+    const userProfile = await  Profile.create({
+      user: user._id,
+    });
+    //  handleCreateProfile(user._id);
+    // console.log(user);
     res.status(201).json({ message: "User created successfully", user });
   } catch (error) {
     console.error(error);
@@ -49,18 +51,13 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    const { accountId, password } = req.body;
-    if (!accountId || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return res.status(400).json({
         message: "Please provide either email or username, and a password.",
       });
     }
-    let user;
-    if (accountId.includes("@")) {
-      user = await User.findOne({ email: accountId });
-    } else {
-      user = await User.findOne({ userName: accountId });
-    }
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -72,7 +69,7 @@ exports.signin = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
     const payload = user.toObject();
-    console.log(payload);
+    // console.log(payload);
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -150,9 +147,8 @@ exports.forgotPassword = async (req, res) => {
     user.passwordResetToken = token;
     user.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
     await user.save();
-    const resetUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/reset-password/${token}`;
+    // const resetUrl = `${req.protocol}://${req.get("host")}/reset-password/${token}`;
+    const resetUrl = `${req.headers.origin}/reset-password/${token}`;
     // Send email with resetUrl
     await sendEmail(
       email,
@@ -175,6 +171,7 @@ exports.forgotPassword = async (req, res) => {
     });
   }
 };
+
 exports.resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
@@ -203,5 +200,22 @@ exports.resetPassword = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+exports.handleGetProfile = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  // console.log(token);
+  // console.log(user);
+  try {
+    const userProfile = await Profile.findOne({user: user._id});
+    await userProfile.populate("user");
+    await userProfile.save();
+    console.log("userProfile", userProfile);
+    res.status(200).json(userProfile);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 };

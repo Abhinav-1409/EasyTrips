@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useState } from "react"
 import Navbar from "../components/Navbar"
@@ -8,32 +8,82 @@ const Profile = ({ onLogout }) => {
   // Tabs
   const [activeTab, setActiveTab] = useState("profile")
 
-  // Mock user data
-  const [userData, setUserData] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Travel Street, Adventure City, AC 12345",
-    gstNumber: "",
-    darkMode: false,
-    emailNotifications: true,
-    clearSearchHistory: false,
-  })
+  // Individual state variables for each form field
+  const [name, setName] = useState("John Doe");
+  const [email, setEmail] = useState("john.doe@example.com");
+  const [phone, setPhone] = useState("+1 (555) 123-4567");
+  const [address, setAddress] = useState("123 Travel Street, Adventure City, AC 12345");
+  const [gstNumber, setGstNumber] = useState("");
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [clearSearchHistory, setClearSearchHistory] = useState(false);
 
-  // Handle input change
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setUserData({
-      ...userData,
-      [name]: type === "checkbox" ? checked : value,
-    })
-  }
+  // States for form handling
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/profile/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+  
+        const data = await response.json();
+        console.log(data);
+  
+        if (!response.ok) {
+          setErrors(data);
+        } else {
+          setName(data.user.name);
+          setEmail(data.user.email);
+          setPhone(data.phone);
+          setAddress(data.address);
+          setGstNumber(data.GSTIN);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setErrors({ message: "Something went wrong." });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchProfile(); 
+  }, []);
+  
 
   // Handle form submission
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     // In a real app, this would update the user's profile
-    alert("Profile updated successfully!")
+    setIsLoading(true);
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/profile/`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    const data = await response.json();
+    console.log(data);
+    if (!response.ok) {
+      setIsLoading(false);
+      setErrors(data);
+      return;
+    }
+    setName(data.user.name);
+    setEmail(data.user.email);
+    setPhone(data.phone);
+    setAddress(data.address);
+    setGstNumber(data.GSTIN);
+    setTimeout(() => {
+      setIsLoading(false);
+      alert("Profile updated successfully!");
+    }, 1000);
   }
 
   // Mock trip data for insights
@@ -58,7 +108,7 @@ const Profile = ({ onLogout }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isAuthenticated={true} onLogout={onLogout} />
+      <Navbar />
 
       <main className="flex-grow bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,8 +159,8 @@ const Profile = ({ onLogout }) => {
                             id="name"
                             name="name"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={userData.name}
-                            onChange={handleInputChange}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                           />
                         </div>
 
@@ -123,8 +173,8 @@ const Profile = ({ onLogout }) => {
                             id="email"
                             name="email"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={userData.email}
-                            onChange={handleInputChange}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
 
@@ -137,8 +187,8 @@ const Profile = ({ onLogout }) => {
                             id="phone"
                             name="phone"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={userData.phone}
-                            onChange={handleInputChange}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
                           />
                         </div>
 
@@ -151,8 +201,8 @@ const Profile = ({ onLogout }) => {
                             name="address"
                             rows="3"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={userData.address}
-                            onChange={handleInputChange}
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
                           ></textarea>
                         </div>
 
@@ -165,8 +215,8 @@ const Profile = ({ onLogout }) => {
                             id="gstNumber"
                             name="gstNumber"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={userData.gstNumber}
-                            onChange={handleInputChange}
+                            value={gstNumber}
+                            onChange={(e) => setGstNumber(e.target.value)}
                           />
                         </div>
                       </div>
@@ -177,24 +227,6 @@ const Profile = ({ onLogout }) => {
 
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">Dark Mode</span>
-                          <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full">
-                            <input
-                              type="checkbox"
-                              id="darkMode"
-                              name="darkMode"
-                              className="absolute w-6 h-6 transition duration-200 ease-in-out transform bg-white border rounded-full appearance-none cursor-pointer peer border-gray-300 checked:right-0 checked:border-blue-600 checked:bg-blue-600"
-                              checked={userData.darkMode}
-                              onChange={handleInputChange}
-                            />
-                            <label
-                              htmlFor="darkMode"
-                              className="block w-full h-full overflow-hidden rounded-full cursor-pointer bg-gray-300 peer-checked:bg-blue-300"
-                            ></label>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
                           <span className="text-sm font-medium text-gray-700">Email Notifications</span>
                           <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full">
                             <input
@@ -202,8 +234,8 @@ const Profile = ({ onLogout }) => {
                               id="emailNotifications"
                               name="emailNotifications"
                               className="absolute w-6 h-6 transition duration-200 ease-in-out transform bg-white border rounded-full appearance-none cursor-pointer peer border-gray-300 checked:right-0 checked:border-blue-600 checked:bg-blue-600"
-                              checked={userData.emailNotifications}
-                              onChange={handleInputChange}
+                              checked={emailNotifications}
+                              onChange={(e) => setEmailNotifications(e.target.checked)}
                             />
                             <label
                               htmlFor="emailNotifications"
@@ -218,8 +250,8 @@ const Profile = ({ onLogout }) => {
                             className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-600 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             onClick={() => {
                               if (window.confirm("Are you sure you want to clear your search history?")) {
-                                setUserData({ ...userData, clearSearchHistory: true })
-                                alert("Search history cleared!")
+                                setClearSearchHistory(true);
+                                alert("Search history cleared!");
                               }
                             }}
                           >
@@ -248,8 +280,35 @@ const Profile = ({ onLogout }) => {
                     <button
                       type="submit"
                       className="px-6 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      disabled={isLoading}
                     >
-                      Save Changes
+                      {isLoading ? (
+                        <span className="flex items-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Saving...
+                        </span>
+                      ) : (
+                        "Save Changes"
+                      )}
                     </button>
                   </div>
                 </form>

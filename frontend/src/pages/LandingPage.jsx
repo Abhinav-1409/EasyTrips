@@ -101,7 +101,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isAuthenticated={false} />
+      <Navbar />
       {/* Hero Section */}
       {/* <section className="bg-gradient-to-r from-blue-400 to-purple-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

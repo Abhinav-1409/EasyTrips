@@ -1,5 +1,4 @@
-import React from "react"
-import { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import LandingPage from "./pages/LandingPage"
 import Login from "./pages/Login"
@@ -14,27 +13,43 @@ import Profile from "./pages/Profile"
 import Feedback from "./pages/Feedback"
 import Notifications from "./pages/Notifications"
 import PackageDetails from "./pages/PackageDetails"
+import Help from "./pages/Help"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from './components/ProtectedRoutes'
 import "./App.css"
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const login = () => {
-    setIsAuthenticated(true)
-  }
+    setIsAuthenticated(true);
+  };
 
   const logout = () => {
-    setIsAuthenticated(false)
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+  };
 
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login onLogin={login} />} />
-        <Route path="/signup" element={<Signup onSignup={login} />} />
+        <Route path="/signup" element={<Signup onLogin={login} />} />
         <Route path="/package/:id" element={<PackageDetails />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Protected Routes */}
         <Route
@@ -89,7 +104,7 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Profile onLogout={logout} />
+              <Profile />
             </ProtectedRoute>
           }
         />

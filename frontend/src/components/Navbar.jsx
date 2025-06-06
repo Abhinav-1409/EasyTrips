@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-const Navbar = ({ isAuthenticated, onLogout }) => {
+const Navbar = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    const user = localStorage.getItem("user")
+    const token = localStorage.getItem("token")
+    if (user && token) {
+      setIsAuthenticated(true);
+    }
+  },[]);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const navigate = useNavigate()
@@ -17,7 +25,10 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
   }
 
   const handleLogout = () => {
-    if (onLogout) onLogout()
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    console.log("logout");
+    setIsAuthenticated(false);
     navigate("/")
   }
 
@@ -87,7 +98,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
                       Wishlist
                     </Link>
                     <button
-                      onClick={handleLogout}
+                      onClick={()=> handleLogout()}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       <span className="mr-1">🚪</span> Logout
