@@ -11,7 +11,7 @@ const sendEmail = async (to, subject, html) => {
     });
 
     const mailOptions = {
-      from: `"Checkpoint Support" <${process.env.MAIL_USER}>`,
+      from: `"EasyTrips Support" <${process.env.MAIL_USER}>`,
       to,
       subject,
       html,
