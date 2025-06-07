@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 
-import { useState } from "react"
-import Navbar from "../components/Navbar"
-import Footer from "../components/Footer"
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = ({ onLogout }) => {
   // Tabs
-  const [activeTab, setActiveTab] = useState("profile")
+  const [activeTab, setActiveTab] = useState("profile");
 
   // Individual state variables for each form field
   const [name, setName] = useState("");
@@ -22,16 +25,21 @@ const Profile = ({ onLogout }) => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState("");
+
   useEffect(() => {
     const fetchProfile = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/profile/`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/profile/`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         const data = await response.json();
         console.log(data);
@@ -56,39 +64,38 @@ const Profile = ({ onLogout }) => {
     fetchProfile();
   }, [profile]);
 
-
   // Handle form submission
 
-
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    // In a real app, this would update the user's profile
+    e.preventDefault();
     setIsLoading(true);
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/profile/`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
-        phone: phone,
-        address: address,
+        name,
+        phone,
+        address,
         gstin: gstNumber,
-      })
-    })
+      }),
+    });
+
     const data = await response.json();
-    // console.log(data);
+
     if (!response.ok) {
       setIsLoading(false);
       setErrors(data);
       return;
     }
+
     setProfile(data.profile);
     setIsLoading(false);
-
-  }
+    toast.success("Profile updated successfully!");
+  };
 
   // Mock trip data for insights
   const tripData = {
@@ -108,7 +115,7 @@ const Profile = ({ onLogout }) => {
       { destination: "Tokyo", percentage: 20 },
       { destination: "Egypt", percentage: 15 },
     ],
-  }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -151,11 +158,16 @@ const Profile = ({ onLogout }) => {
                 <form onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+                      <h2 className="text-xl font-semibold mb-4">
+                        Personal Information
+                      </h2>
 
                       <div className="space-y-4">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Full Name
                           </label>
                           <input
@@ -169,7 +181,10 @@ const Profile = ({ onLogout }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Email
                           </label>
                           <input
@@ -183,7 +198,10 @@ const Profile = ({ onLogout }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="phone"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Phone
                           </label>
                           <input
@@ -197,7 +215,10 @@ const Profile = ({ onLogout }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="address"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Address
                           </label>
                           <textarea
@@ -211,7 +232,10 @@ const Profile = ({ onLogout }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="gstNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="gstNumber"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             GST Number (Optional)
                           </label>
                           <input
@@ -227,11 +251,15 @@ const Profile = ({ onLogout }) => {
                     </div>
 
                     <div>
-                      <h2 className="text-xl font-semibold mb-4">Preferences</h2>
+                      <h2 className="text-xl font-semibold mb-4">
+                        Preferences
+                      </h2>
 
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">Email Notifications</span>
+                          <span className="text-sm font-medium text-gray-700">
+                            Email Notifications
+                          </span>
                           <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full">
                             <input
                               type="checkbox"
@@ -239,7 +267,9 @@ const Profile = ({ onLogout }) => {
                               name="emailNotifications"
                               className="absolute w-6 h-6 transition duration-200 ease-in-out transform bg-white border rounded-full appearance-none cursor-pointer peer border-gray-300 checked:right-0 checked:border-blue-600 checked:bg-blue-600"
                               checked={emailNotifications}
-                              onChange={(e) => setEmailNotifications(e.target.checked)}
+                              onChange={(e) =>
+                                setEmailNotifications(e.target.checked)
+                              }
                             />
                             <label
                               htmlFor="emailNotifications"
@@ -253,7 +283,11 @@ const Profile = ({ onLogout }) => {
                             type="button"
                             className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-600 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             onClick={() => {
-                              if (window.confirm("Are you sure you want to clear your search history?")) {
+                              if (
+                                window.confirm(
+                                  "Are you sure you want to clear your search history?"
+                                )
+                              ) {
                                 setClearSearchHistory(true);
                                 alert("Search history cleared!");
                               }
@@ -268,8 +302,12 @@ const Profile = ({ onLogout }) => {
                             type="button"
                             className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             onClick={() => {
-                              if (window.confirm("Are you sure you want to log out?")) {
-                                onLogout()
+                              if (
+                                window.confirm(
+                                  "Are you sure you want to log out?"
+                                )
+                              ) {
+                                onLogout();
                               }
                             }}
                           >
@@ -313,7 +351,9 @@ const Profile = ({ onLogout }) => {
                       ) : (
                         "Save Changes"
                       )}
+
                     </button>
+
                   </div>
                 </form>
               </div>
@@ -322,42 +362,68 @@ const Profile = ({ onLogout }) => {
             {/* Insights Tab */}
             {activeTab === "insights" && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Your Travel Insights</h2>
+                <h2 className="text-xl font-semibold mb-6">
+                  Your Travel Insights
+                </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                   <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-blue-600 font-medium">Total Trips</p>
-                    <p className="text-2xl font-bold text-blue-700">{tripData.totalTrips}</p>
+                    <p className="text-sm text-blue-600 font-medium">
+                      Total Trips
+                    </p>
+                    <p className="text-2xl font-bold text-blue-700">
+                      {tripData.totalTrips}
+                    </p>
                   </div>
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <p className="text-sm text-green-600 font-medium">Total Spent</p>
-                    <p className="text-2xl font-bold text-green-700">₹{tripData.totalSpent}</p>
+                    <p className="text-sm text-green-600 font-medium">
+                      Total Spent
+                    </p>
+                    <p className="text-2xl font-bold text-green-700">
+                      ₹{tripData.totalSpent}
+                    </p>
                   </div>
                   <div className="bg-purple-50 p-4 rounded-lg">
-                    <p className="text-sm text-purple-600 font-medium">Favorite Category</p>
-                    <p className="text-2xl font-bold text-purple-700">{tripData.favoriteCategory}</p>
+                    <p className="text-sm text-purple-600 font-medium">
+                      Favorite Category
+                    </p>
+                    <p className="text-2xl font-bold text-purple-700">
+                      {tripData.favoriteCategory}
+                    </p>
                   </div>
                   <div className="bg-pink-50 p-4 rounded-lg">
-                    <p className="text-sm text-pink-600 font-medium">Money Saved</p>
-                    <p className="text-2xl font-bold text-pink-700">₹{tripData.moneySaved}</p>
+                    <p className="text-sm text-pink-600 font-medium">
+                      Money Saved
+                    </p>
+                    <p className="text-2xl font-bold text-pink-700">
+                      ₹{tripData.moneySaved}
+                    </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Bar Chart: Trips by Category */}
                   <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 className="text-lg font-semibold mb-4">Trips by Category</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Trips by Category
+                    </h3>
                     <div className="space-y-4">
                       {tripData.tripsByCategory.map((item, index) => (
                         <div key={index}>
                           <div className="flex justify-between mb-1">
-                            <span className="text-sm font-medium text-gray-700">{item.category}</span>
-                            <span className="text-sm text-gray-600">{item.count}</span>
+                            <span className="text-sm font-medium text-gray-700">
+                              {item.category}
+                            </span>
+                            <span className="text-sm text-gray-600">
+                              {item.count}
+                            </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div
                               className="bg-blue-600 h-2.5 rounded-full"
-                              style={{ width: `₹{(item.count / tripData.totalTrips) * 100}%` }}
+                              style={{
+                                width: `₹{(item.count / tripData.totalTrips) * 100}%`,
+                              }}
                             ></div>
                           </div>
                         </div>
@@ -367,7 +433,9 @@ const Profile = ({ onLogout }) => {
 
                   {/* Pie Chart: Popular Destinations */}
                   <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 className="text-lg font-semibold mb-4">Popular Destinations</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Popular Destinations
+                    </h3>
                     <div className="flex items-center justify-center">
                       <div className="relative w-48 h-48">
                         {/* Simple pie chart visualization */}
@@ -445,10 +513,21 @@ const Profile = ({ onLogout }) => {
           </div>
         </div>
       </main>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
