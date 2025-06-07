@@ -219,3 +219,30 @@ exports.handleGetProfile = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+exports.handleUpdateProfile = async (req, res)=>{
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  const {name,phone,address,gstin} = req.body;
+  console.log(name,phone,address,gstin);
+  // console.log(req.body);
+  try{
+    const profile = await Profile.findOne({user: user._id});
+    if(!profile){
+      return res.status(404).json({message: "Profile not found"});
+    }
+    if(name){
+      const data = await User.findById(user._id).updateOne({name: name});
+    }
+    profile.phone = phone || profile.phone;
+    profile.address = address || profile.address;
+    profile.GSTIN = gstin || profile.GSTIN;
+    await profile.save();
+    res.status(200).json({message: "Profile updated successfully", profile: profile});
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({message: err.message});
+  }
+}

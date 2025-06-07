@@ -2,18 +2,21 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
+import Modal from '../components/Modal'
 
 const Signup = () => {
+  const { login } = useAuth();
   // Separate states for each form field
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-
-  // States for form handling
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -70,6 +73,11 @@ const Signup = () => {
         const data = await response.json();
         if (!response.ok) {
           throw new Error("Signup failed" + data.message);
+        }
+        
+        // Use the login function from AuthContext if the API returns a token
+        if (data.user && data.user.token) {
+          login(data.user._id, data.user.token);
         }
 
         setTimeout(() => {
@@ -188,13 +196,13 @@ const Signup = () => {
                   />
                   <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
                     I agree to the{" "}
-                    <Link to="/terms" className="font-medium text-blue-600 hover:text-blue-500">
+                    <span onClick={()=> setIsTermsOpen(true)} className="font-medium text-blue-600 hover:text-blue-500">
                       Terms and Conditions
-                    </Link>{" "}
+                    </span>{" "}
                     and{" "}
-                    <Link to="/privacy" className="font-medium text-blue-600 hover:text-blue-500">
+                    <span onClick={()=> setIsPrivacyOpen(true)} className="font-medium text-blue-600 hover:text-blue-500">
                       Privacy Policy
-                    </Link>
+                    </span>
                   </label>
                 </div>
                 {errors.agreeTerms && <p className="mt-1 text-sm text-red-600">{errors.agreeTerms}</p>}
@@ -238,6 +246,16 @@ const Signup = () => {
               </div>
             </div>
           </div>
+
+          <Modal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)}>
+            <h2 className="text-xl font-bold mb-4">Terms and Conditions</h2>
+            <p>Here are the terms and conditions for signup...</p>
+          </Modal>
+
+          <Modal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)}>
+            <h2 className="text-xl font-bold mb-4">Privacy Policy</h2>
+            <p>Here is the privacy policy for signup...</p>
+          </Modal>
 
           <Footer />
         </div>

@@ -1,17 +1,10 @@
-import React, { useEffect } from "react";
-
+import React from "react";
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(() => {
-    const user = localStorage.getItem("user")
-    const token = localStorage.getItem("token")
-    if (user && token) {
-      setIsAuthenticated(true);
-    }
-  },[]);
+  const { isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const navigate = useNavigate()
@@ -25,10 +18,8 @@ const Navbar = () => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    logout();
     console.log("logout");
-    setIsAuthenticated(false);
     navigate("/")
   }
 

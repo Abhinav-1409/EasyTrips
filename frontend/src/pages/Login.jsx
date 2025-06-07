@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
 
-const Login = (props) => {
+const Login = () => {
   // Separate states for each form field
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +32,8 @@ const Login = (props) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -50,10 +53,9 @@ const Login = (props) => {
         if (!response.ok) {
           throw new Error("Error: " + data.message);
         }
-        localStorage.setItem("token", data.user.token);
-        localStorage.setItem("user", data.user._id);
+        // Use the login function from AuthContext
+        login(data.user._id, data.user.token);
         setIsLoading(false);
-        props.onLogin(); // Call the onLogin function passed from App.jsx
         navigate("/dashboard");
       } catch (error) {
         console.error("Login error:", error);

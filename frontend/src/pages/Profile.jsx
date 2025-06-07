@@ -9,13 +9,14 @@ const Profile = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState("profile")
 
   // Individual state variables for each form field
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("john.doe@example.com");
-  const [phone, setPhone] = useState("+1 (555) 123-4567");
-  const [address, setAddress] = useState("123 Travel Street, Adventure City, AC 12345");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [gstNumber, setGstNumber] = useState("");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [clearSearchHistory, setClearSearchHistory] = useState(false);
+  const [profile, setProfile] = useState([]);
 
   // States for form handling
   const [errors, setErrors] = useState({});
@@ -31,10 +32,10 @@ const Profile = ({ onLogout }) => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-  
+
         const data = await response.json();
         console.log(data);
-  
+
         if (!response.ok) {
           setErrors(data);
         } else {
@@ -51,10 +52,10 @@ const Profile = ({ onLogout }) => {
         setIsLoading(false);
       }
     };
-  
-    fetchProfile(); 
-  }, []);
-  
+
+    fetchProfile();
+  }, [profile]);
+
 
   // Handle form submission
 
@@ -65,25 +66,28 @@ const Profile = ({ onLogout }) => {
     setIsLoading(true);
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/profile/`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        address: address,
+        gstin: gstNumber,
+      })
     })
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     if (!response.ok) {
       setIsLoading(false);
       setErrors(data);
       return;
     }
-    setName(data.user.name);
-    setEmail(data.user.email);
-    setPhone(data.phone);
-    setAddress(data.address);
-    setGstNumber(data.GSTIN);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert("Profile updated successfully!");
-    }, 1000);
+    setProfile(data.profile);
+    setIsLoading(false);
+
   }
 
   // Mock trip data for insights
@@ -174,7 +178,7 @@ const Profile = ({ onLogout }) => {
                             name="email"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            disabled
                           />
                         </div>
 
@@ -278,7 +282,7 @@ const Profile = ({ onLogout }) => {
 
                   <div className="mt-8">
                     <button
-                      type="submit"
+                      onClick={(e) => handleSubmit(e)}
                       className="px-6 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       disabled={isLoading}
                     >
