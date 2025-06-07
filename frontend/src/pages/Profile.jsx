@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Profile = ({ onLogout }) => {
+const Profile = () => {
   // Tabs
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -20,12 +21,15 @@ const Profile = ({ onLogout }) => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [clearSearchHistory, setClearSearchHistory] = useState(false);
   const [profile, setProfile] = useState([]);
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
 
   // States for form handling
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -301,15 +305,7 @@ const Profile = ({ onLogout }) => {
                           <button
                             type="button"
                             className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                            onClick={() => {
-                              if (
-                                window.confirm(
-                                  "Are you sure you want to log out?"
-                                )
-                              ) {
-                                onLogout();
-                              }
-                            }}
+                            onClick={() => {logout(); navigate("/");}}
                           >
                             Logout
                           </button>
