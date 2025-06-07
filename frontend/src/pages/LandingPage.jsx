@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
 
 const LandingPage = () => {
   // Mock data for featured packages
@@ -99,6 +100,10 @@ const LandingPage = () => {
     },
   ];
 
+  const { isAuthenticated } = useAuth();
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -150,12 +155,14 @@ const LandingPage = () => {
             >
               Browse Packages
             </Link>
-            <Link
-              to="/signup"
-              className="px-8 py-3 border-2 bg-white text-blue-500 font-bold rounded-full hover:bg-gray-300 transition duration-300"
-            >
-              Sign Up Now
-            </Link>
+            {!isAuthenticated && (
+              <Link
+                to="/signup"
+                className="px-8 py-3 border-2 bg-white text-blue-500 font-bold rounded-full hover:bg-gray-300 transition duration-300"
+              >
+                Sign Up Now
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -416,6 +423,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
 
       <Footer />
     </div>
