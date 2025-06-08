@@ -74,7 +74,6 @@ const destinationSchema = new mongoose.Schema({
    imageUrl: [ {
       type: String,
       required: true,
-      trim: true,
    }],
    price: {
       type: Number,
@@ -96,12 +95,12 @@ const destinationSchema = new mongoose.Schema({
          trim: true,
       }],
    }],
-   Whatincluded: [{
+   included: [{
       type: String,
       required: true,
       trim: true,
    }],
-   Whatnotincluded: [{
+   notIncluded: [{
       type: String,
       required: true,
       trim: true,
@@ -116,11 +115,14 @@ const destinationSchema = new mongoose.Schema({
       required: true,
       trim: true,
    },
-   tourOperator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'TourOperator',
+   tourOperator: [{
+      type: {
+         name: String,
+         phone: String,
+         email: String,
+      },
       required: true,
-   },
+   }],
    createdAt: {
       type: Date,
       default: Date.now,

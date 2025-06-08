@@ -11,29 +11,38 @@ export const useAuth = () => {
 // Create the AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
+  const [role, setRole] = useState("user"); // Assuming role is part of user data
   const [loading, setLoading] = useState(true);
 
   // Check if user is authenticated on initial load
   useEffect(() => {
     const checkAuthStatus = () => {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('user');
-      
-      if (token && userId) {
+      const userStr = localStorage.getItem('user');
+      let userObj = null;
+      if (userStr) {
+        try {
+          userObj = JSON.parse(userStr);
+        } catch {
+          userObj = null;
+        }
+      }
+      if (token && userObj) {
         setIsAuthenticated(true);
-        setUser(userId);
+        setUser(userObj);
+        setRole(userObj.isAdmin ? "Admin" : "user");
       }
       setLoading(false);
     };
-    
     checkAuthStatus();
   }, []);
 
   // Login function
   const login = (userData, token) => {
     localStorage.setItem('token', token);
-    localStorage.setItem('user', userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setRole(userData.isAdmin ? "Admin" : "user");
     setIsAuthenticated(true);
     setUser(userData);
   };
@@ -50,6 +59,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     isAuthenticated,
     user,
+    role,
     loading,
     login,
     logout

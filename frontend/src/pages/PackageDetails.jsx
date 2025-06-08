@@ -1,133 +1,147 @@
 import React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 
 const PackageDetails = () => {
-  const { id } = useParams()
+  const { id } = useParams();
+  const [packageData, setPackageData] = useState({})
 
   // Mock package data
-  const packageData = {
-    id: Number.parseInt(id),
-    name: "Swiss Alps Adventure",
-    images: [
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-    ],
-    price: 1899,
-    duration: "8 days",
-    rating: 4.9,
-    reviewCount: 124,
-    groupSize: "4-12",
-    bestTime: "Jun-Sep",
-    description:
-      "Experience the breathtaking beauty of the Swiss Alps with our 8-day adventure package. Trek through stunning mountain landscapes, visit charming alpine villages, and enjoy the crisp mountain air. This tour combines outdoor activities with cultural experiences for an unforgettable Swiss vacation.",
-    highlights: [
-      "Guided hiking through scenic mountain trails",
-      "Cable car ride to Schilthorn summit",
-      "Visit to traditional Swiss chocolate factory",
-      "Boat cruise on Lake Lucerne",
-      "Explore the charming streets of Zermatt",
-      "Optional paragliding experience (additional cost)",
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: "Arrival in Zurich",
-        description:
-          "Arrive at Zurich Airport and transfer to your hotel. Meet your guide and fellow travelers for a welcome dinner and briefing about the adventure ahead.",
-      },
-      {
-        day: 2,
-        title: "Lucerne Exploration",
-        description:
-          "Travel to Lucerne and explore this beautiful lakeside city. Visit the Chapel Bridge, Lion Monument, and enjoy a boat cruise on Lake Lucerne.",
-      },
-      {
-        day: 3,
-        title: "Mount Pilatus",
-        description:
-          "Experience the Golden Round Trip to Mount Pilatus, including a cogwheel railway ride up the mountain and panoramic gondola descent. Enjoy breathtaking views of the Alps.",
-      },
-      {
-        day: 4,
-        title: "Interlaken & Thun",
-        description:
-          "Travel to Interlaken, situated between two lakes. Visit Thun Castle and enjoy free time to explore or opt for adventure activities like paragliding.",
-      },
-      {
-        day: 5,
-        title: "Jungfraujoch Excursion",
-        description:
-          "Journey to Jungfraujoch, the 'Top of Europe,' via scenic train ride. Explore the Ice Palace, Sphinx Observatory, and enjoy snow activities on the glacier.",
-      },
-      {
-        day: 6,
-        title: "Zermatt & Matterhorn",
-        description:
-          "Travel to Zermatt, a car-free village at the foot of the Matterhorn. Take the Gornergrat railway for spectacular views of the iconic mountain.",
-      },
-      {
-        day: 7,
-        title: "Chocolate & Cheese",
-        description:
-          "Visit a traditional Swiss chocolate factory and cheese dairy. Learn about the production processes and enjoy tastings. Farewell dinner in the evening.",
-      },
-      {
-        day: 8,
-        title: "Departure",
-        description: "Transfer to Zurich Airport for your departure flight. End of services.",
-      },
-    ],
-    included: [
-      "7 nights accommodation in 3-4 star hotels",
-      "Daily breakfast and 3 dinners",
-      "All transportation within Switzerland",
-      "English-speaking guide throughout",
-      "All activities and entrance fees as per itinerary",
-      "Airport transfers on arrival and departure",
-    ],
-    notIncluded: [
-      "International flights",
-      "Travel insurance",
-      "Optional activities",
-      "Meals not mentioned in the itinerary",
-      "Personal expenses and gratuities",
-    ],
-    reviews: [
-      {
-        id: 1,
-        name: "Sarah Johnson",
-        rating: 5,
-        date: "2023-06-15",
-        comment:
-          "This was the trip of a lifetime! The Swiss Alps are even more beautiful than I imagined. Our guide was knowledgeable and the itinerary was perfect - a great mix of activities and free time. Highly recommend!",
-        image: "/placeholder.svg?height=60&width=60",
-      },
-      {
-        id: 2,
-        name: "Michael Chen",
-        rating: 5,
-        date: "2023-05-22",
-        comment:
-          "Excellent tour from start to finish. The accommodations were comfortable, the transportation was seamless, and the views were spectacular. The Jungfraujoch excursion was definitely the highlight!",
-        image: "/placeholder.svg?height=60&width=60",
-      },
-      {
-        id: 3,
-        name: "Emily Rodriguez",
-        rating: 4,
-        date: "2023-04-10",
-        comment:
-          "Great experience overall. The itinerary was well-planned and our guide was fantastic. The only reason I'm giving 4 stars instead of 5 is that some of the hotels were a bit basic. But the experiences more than made up for it!",
-        image: "/placeholder.svg?height=60&width=60",
-      },
-    ],
-  }
+  // const packageData = {
+  //   id: Number.parseInt(id),
+  //   name: "Swiss Alps Adventure",
+  //   images: [
+  //     "/placeholder.svg?height=400&width=600",
+  //     "/placeholder.svg?height=400&width=600",
+  //     "/placeholder.svg?height=400&width=600",
+  //     "/placeholder.svg?height=400&width=600",
+  //   ],
+  //   price: 1899,
+  //   duration: "8 days",
+  //   rating: 4.9,
+  //   reviewCount: 124,
+  //   groupSize: "4-12",
+  //   bestTime: "Jun-Sep",
+  //   description:
+  //     "Experience the breathtaking beauty of the Swiss Alps with our 8-day adventure package. Trek through stunning mountain landscapes, visit charming alpine villages, and enjoy the crisp mountain air. This tour combines outdoor activities with cultural experiences for an unforgettable Swiss vacation.",
+  //   highlights: [
+  //     "Guided hiking through scenic mountain trails",
+  //     "Cable car ride to Schilthorn summit",
+  //     "Visit to traditional Swiss chocolate factory",
+  //     "Boat cruise on Lake Lucerne",
+  //     "Explore the charming streets of Zermatt",
+  //     "Optional paragliding experience (additional cost)",
+  //   ],
+  //   itinerary: [
+  //     {
+  //       day: 1,
+  //       title: "Arrival in Zurich",
+  //       description:
+  //         "Arrive at Zurich Airport and transfer to your hotel. Meet your guide and fellow travelers for a welcome dinner and briefing about the adventure ahead.",
+  //     },
+  //     {
+  //       day: 2,
+  //       title: "Lucerne Exploration",
+  //       description:
+  //         "Travel to Lucerne and explore this beautiful lakeside city. Visit the Chapel Bridge, Lion Monument, and enjoy a boat cruise on Lake Lucerne.",
+  //     },
+  //     {
+  //       day: 3,
+  //       title: "Mount Pilatus",
+  //       description:
+  //         "Experience the Golden Round Trip to Mount Pilatus, including a cogwheel railway ride up the mountain and panoramic gondola descent. Enjoy breathtaking views of the Alps.",
+  //     },
+  //     {
+  //       day: 4,
+  //       title: "Interlaken & Thun",
+  //       description:
+  //         "Travel to Interlaken, situated between two lakes. Visit Thun Castle and enjoy free time to explore or opt for adventure activities like paragliding.",
+  //     },
+  //     {
+  //       day: 5,
+  //       title: "Jungfraujoch Excursion",
+  //       description:
+  //         "Journey to Jungfraujoch, the 'Top of Europe,' via scenic train ride. Explore the Ice Palace, Sphinx Observatory, and enjoy snow activities on the glacier.",
+  //     },
+  //     {
+  //       day: 6,
+  //       title: "Zermatt & Matterhorn",
+  //       description:
+  //         "Travel to Zermatt, a car-free village at the foot of the Matterhorn. Take the Gornergrat railway for spectacular views of the iconic mountain.",
+  //     },
+  //     {
+  //       day: 7,
+  //       title: "Chocolate & Cheese",
+  //       description:
+  //         "Visit a traditional Swiss chocolate factory and cheese dairy. Learn about the production processes and enjoy tastings. Farewell dinner in the evening.",
+  //     },
+  //     {
+  //       day: 8,
+  //       title: "Departure",
+  //       description: "Transfer to Zurich Airport for your departure flight. End of services.",
+  //     },
+  //   ],
+  //   included: [
+  //     "7 nights accommodation in 3-4 star hotels",
+  //     "Daily breakfast and 3 dinners",
+  //     "All transportation within Switzerland",
+  //     "English-speaking guide throughout",
+  //     "All activities and entrance fees as per itinerary",
+  //     "Airport transfers on arrival and departure",
+  //   ],
+  //   notIncluded: [
+  //     "International flights",
+  //     "Travel insurance",
+  //     "Optional activities",
+  //     "Meals not mentioned in the itinerary",
+  //     "Personal expenses and gratuities",
+  //   ],
+  //   reviews: [
+  //     {
+  //       id: 1,
+  //       name: "Sarah Johnson",
+  //       rating: 5,
+  //       date: "2023-06-15",
+  //       comment:
+  //         "This was the trip of a lifetime! The Swiss Alps are even more beautiful than I imagined. Our guide was knowledgeable and the itinerary was perfect - a great mix of activities and free time. Highly recommend!",
+  //       image: "/placeholder.svg?height=60&width=60",
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "Michael Chen",
+  //       rating: 5,
+  //       date: "2023-05-22",
+  //       comment:
+  //         "Excellent tour from start to finish. The accommodations were comfortable, the transportation was seamless, and the views were spectacular. The Jungfraujoch excursion was definitely the highlight!",
+  //       image: "/placeholder.svg?height=60&width=60",
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "Emily Rodriguez",
+  //       rating: 4,
+  //       date: "2023-04-10",
+  //       comment:
+  //         "Great experience overall. The itinerary was well-planned and our guide was fantastic. The only reason I'm giving 4 stars instead of 5 is that some of the hotels were a bit basic. But the experiences more than made up for it!",
+  //       image: "/placeholder.svg?height=60&width=60",
+  //     },
+  //   ],
+  // }
+  useEffect(() => {
+    const fetchPackageData = async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/destination/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+      setPackageData(data.destination);
+      return data;
+    }
+    fetchPackageData();
+    // setPackageData(data.destination);
+  }, [id])
 
   // State for active image
   const [activeImage, setActiveImage] = useState(0)
@@ -191,9 +205,8 @@ const PackageDetails = () => {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <svg
                         key={star}
-                        className={`w-5 h-5 ₹{
-                          star <= Math.round(packageData.rating) ? "text-yellow-400" : "text-gray-300"
-                        }`}
+                        className={`w-5 h-5 ${star <= Math.round(packageData.ratings?.average || 0) ? "text-yellow-400" : "text-gray-300"
+                          }`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -202,7 +215,7 @@ const PackageDetails = () => {
                     ))}
                   </div>
                   <span className="ml-2 text-gray-600">
-                    {packageData.rating} ({packageData.reviewCount} reviews)
+                    {packageData.ratings?.average} ({packageData.ratings?.count} reviews)
                   </span>
                 </div>
               </div>
@@ -220,13 +233,13 @@ const PackageDetails = () => {
               <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
                 <div className="relative h-96">
                   <img
-                    src={packageData.images[activeImage] || "/placeholder.svg"}
+                    src={packageData.image && packageData.images[activeImage] || "/placeholder.svg"}
                     alt={`₹{packageData.name} - Image ₹{activeImage + 1}`}
                     className="w-full h-full object-cover"
                   />
 
                   {/* Navigation Arrows */}
-                  {packageData.images.length > 1 && (
+                  {packageData.image && packageData.images.length > 1 && (
                     <>
                       <button
                         onClick={() =>
@@ -253,9 +266,9 @@ const PackageDetails = () => {
                 </div>
 
                 {/* Thumbnail Gallery */}
-                {packageData.images.length > 1 && (
+                {packageData.image && packageData.images.length > 1 && (
                   <div className="flex p-2 overflow-x-auto">
-                    {packageData.images.map((image, index) => (
+                    {packageData.image && packageData.images.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setActiveImage(index)}
@@ -332,11 +345,11 @@ const PackageDetails = () => {
                         </div>
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <span className="block text-sm text-gray-500">Best Time</span>
-                          <span className="block font-semibold">{packageData.bestTime}</span>
+                          <span className="block font-semibold">{packageData.bestTimeToVisit}</span>
                         </div>
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <span className="block text-sm text-gray-500">Rating</span>
-                          <span className="block font-semibold">{packageData.rating}/5</span>
+                          <span className="block font-semibold">{packageData.ratings?.average}/5({packageData.ratings?.count})</span>
                         </div>
                       </div>
 
@@ -345,7 +358,7 @@ const PackageDetails = () => {
 
                       <h2 className="text-xl font-semibold mb-4">Highlights</h2>
                       <ul className="list-disc pl-5 mb-6 space-y-2">
-                        {packageData.highlights.map((highlight, index) => (
+                        {packageData.highlights && packageData.highlights.map((highlight, index) => (
                           <li key={index} className="text-gray-700">
                             {highlight}
                           </li>
@@ -359,12 +372,14 @@ const PackageDetails = () => {
                     <div>
                       <h2 className="text-xl font-semibold mb-6">Day-by-Day Itinerary</h2>
                       <div className="space-y-6">
-                        {packageData.itinerary.map((day) => (
+                        {packageData && packageData.itinerary.map((day) => (
                           <div key={day.day} className="border-l-4 border-blue-500 pl-4">
                             <h3 className="font-semibold text-lg">
                               Day {day.day}: {day.title}
                             </h3>
-                            <p className="text-gray-700 mt-2">{day.description}</p>
+                            {day.activities && day.activities.length > 0 && day.activities.map((activity, index) => (
+                              <p key={index} className="text-gray-700 mt-2">{activity}</p>
+                            ))}
                           </div>
                         ))}
                       </div>
@@ -376,7 +391,7 @@ const PackageDetails = () => {
                     <div>
                       <h2 className="text-xl font-semibold mb-4">What's Included</h2>
                       <ul className="list-disc pl-5 mb-6 space-y-2">
-                        {packageData.included.map((item, index) => (
+                        {packageData && packageData.included.map((item, index) => (
                           <li key={index} className="text-gray-700">
                             {item}
                           </li>
@@ -385,7 +400,7 @@ const PackageDetails = () => {
 
                       <h2 className="text-xl font-semibold mb-4">What's Not Included</h2>
                       <ul className="list-disc pl-5 space-y-2">
-                        {packageData.notIncluded.map((item, index) => (
+                        {packageData && packageData.notIncluded.map((item, index) => (
                           <li key={index} className="text-gray-700">
                             {item}
                           </li>
@@ -402,9 +417,8 @@ const PackageDetails = () => {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <svg
                               key={star}
-                              className={`w-5 h-5 ₹{
-                                star <= Math.round(packageData.rating) ? "text-yellow-400" : "text-gray-300"
-                              }`}
+                              className={`w-5 h-5 ${star <= Math.round(packageData.ratings?.average || 0) ? "text-yellow-400" : "text-gray-300"
+                                }`}
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -412,12 +426,12 @@ const PackageDetails = () => {
                             </svg>
                           ))}
                         </div>
-                        <span className="ml-2 text-gray-900 font-semibold">{packageData.rating} out of 5</span>
+                        <span className="ml-2 text-gray-900 font-semibold">{packageData.ratings.average} out of 5</span>
                         <span className="ml-2 text-gray-600">({packageData.reviewCount} reviews)</span>
                       </div>
 
                       <div className="space-y-6">
-                        {packageData.reviews.map((review) => (
+                        {packageData && packageData.reviews.map((review) => (
                           <div key={review.id} className="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
                             <div className="flex items-start">
                               <img

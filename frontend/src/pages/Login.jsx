@@ -56,7 +56,7 @@ const Login = () => {
           throw new Error("Error: " + data.message);
         }
         // Use the login function from AuthContext
-        login(data.user._id, data.user.token);
+        login(data.user, data.user.token);
         setIsLoading(false);
         navigate("/dashboard");
       } catch (error) {

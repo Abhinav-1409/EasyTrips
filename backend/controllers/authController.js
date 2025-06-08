@@ -2,7 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Profile = require("../models/profile");
-
+const Destination = require("../models/destination");
 const dotenv = require("dotenv");
 // const { handleCreateProfile } = require("./profileController");
 dotenv.config();
@@ -24,7 +24,7 @@ exports.signup = async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({
         success: false,
-        message: "Email already exists"
+        message: "Email already exists",
       });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,7 +34,7 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
     });
     // Create a profile for the user
-    const userProfile = await  Profile.create({
+    const userProfile = await Profile.create({
       user: user._id,
     });
     //  handleCreateProfile(user._id);
@@ -128,7 +128,6 @@ exports.logout = async (req, res) => {
   }
 };
 
-
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -205,12 +204,12 @@ exports.resetPassword = async (req, res) => {
 
 exports.handleGetProfile = async (req, res) => {
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = authHeader && authHeader.split(" ")[1];
   const user = jwt.verify(token, process.env.JWT_SECRET);
   // console.log(token);
   // console.log(user);
   try {
-    const userProfile = await Profile.findOne({user: user._id});
+    const userProfile = await Profile.findOne({ user: user._id });
     await userProfile.populate("user");
     await userProfile.save();
     console.log("userProfile", userProfile);
@@ -220,29 +219,123 @@ exports.handleGetProfile = async (req, res) => {
   }
 };
 
-exports.handleUpdateProfile = async (req, res)=>{
+exports.handleUpdateProfile = async (req, res) => {
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = authHeader && authHeader.split(" ")[1];
   const user = jwt.verify(token, process.env.JWT_SECRET);
-  const {name,phone,address,gstin} = req.body;
-  console.log(name,phone,address,gstin);
+  const { name, phone, address, gstin } = req.body;
+  console.log(name, phone, address, gstin);
   // console.log(req.body);
-  try{
-    const profile = await Profile.findOne({user: user._id});
-    if(!profile){
-      return res.status(404).json({message: "Profile not found"});
+  try {
+    const profile = await Profile.findOne({ user: user._id });
+    if (!profile) {
+      return res.status(404).json({ message: "Profile not found" });
     }
-    if(name){
-      const data = await User.findById(user._id).updateOne({name: name});
+    if (name) {
+      const data = await User.findById(user._id).updateOne({ name: name });
     }
     profile.phone = phone || profile.phone;
     profile.address = address || profile.address;
     profile.GSTIN = gstin || profile.GSTIN;
     await profile.save();
-    res.status(200).json({message: "Profile updated successfully", profile: profile});
-  }
-  catch(err){
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", profile: profile });
+  } catch (err) {
     console.log(err);
-    res.status(500).json({message: err.message});
+    res.status(500).json({ message: err.message });
   }
-}
+};
+
+exports.handleAddDestination = async (req, res) => {
+  const {
+    name,
+    description,
+    highlights,
+    bestTimeToVisit,
+    groupSize,
+    duration,
+    location,
+    images,
+    price,
+    availability,
+    itinerary,
+    whatIncluded,
+    whatNotIncluded,
+    cancellationPolicy,
+    termsAndConditions,
+    tourOperator,
+  } = req.body;
+  try {
+    const itineraryObject = itinerary.map((item) => ({
+      day: item.day,
+      activities: item.activities,
+    }));
+    const destinationData = await Destination.create({
+      name: name,
+      description: description,
+      highlights: highlights,
+      bestTimeToVisit: bestTimeToVisit,
+      groupSize: groupSize,
+      duration: duration,
+      location: location,
+      images: images,
+      price: price,
+      availability: availability,
+      itinerary: itineraryObject,
+      included: whatIncluded,
+      notIncluded: whatNotIncluded,
+      cancellationPolicy: cancellationPolicy,
+      termsAndConditions: termsAndConditions,
+      tourOperator: tourOperator,
+    });
+    console.log("Destination added successfully", destinationData);
+    res.status(201).json({
+      success: true,
+      message: "Destination added successfully",
+      destination: destinationData,
+    });
+  } catch (error) {
+    console.error("Error adding destination:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding destination",
+      error: error.message,
+    });
+  }
+};
+exports.handleGetDestinations = async (req, res) => {
+  try {
+    const destinations = await Destination.find();
+    if (!destinations || destinations.length === 0) {
+      return res.status(404).json({ message: "No destinations found" });
+    }
+    res.status(200).json(destinations);
+  } catch (error) {
+    console.error("Error fetching destinations:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching destinations",
+      error: error.message,
+    });
+  }
+};
+exports.handleGetDestinationById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const destination = await Destination.findById(id);
+    // console.log("Destination ID:", id);
+    // console.log("Destination:", destination);
+    if (!destination) {
+      return res.status(404).json({ message: "Destination not found" });
+    }
+    res.status(200).json({ destination: destination });
+  } catch (error) {
+    console.error("Error fetching destination:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching destination",
+      error: error.message,
+    });
+  }
+};
