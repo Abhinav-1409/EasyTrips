@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, role } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const navigate = useNavigate()
@@ -52,6 +52,12 @@ const Navbar = () => {
                 <span className="mr-1">📞</span> Help
               </span>
             </Link>
+
+            {role === 'Admin' &&  <Link to="/add-destination" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
+              <span className="flex items-center">
+                Add Destination
+              </span>
+            </Link>}
 
             {isAuthenticated ? (
               <div className="relative ml-3">
