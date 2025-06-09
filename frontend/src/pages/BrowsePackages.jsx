@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 import { useState } from "react"
 import { Link } from "react-router-dom"
@@ -7,96 +7,18 @@ import Footer from "../components/Footer"
 
 const BrowsePackages = () => {
   // Mock data for tour packages
-  const allPackages = [
-    {
-      id: 1,
-      name: "Bali Paradise Escape",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1299,
-      duration: "7 days",
-      rating: 4.8,
-      groupSize: "2-10",
-      bestTime: "Apr-Oct",
-      category: "beach",
-    },
-    {
-      id: 2,
-      name: "Swiss Alps Adventure",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1899,
-      duration: "8 days",
-      rating: 4.9,
-      groupSize: "4-12",
-      bestTime: "Jun-Sep",
-      category: "mountain",
-    },
-    {
-      id: 3,
-      name: "Tokyo City Explorer",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1599,
-      duration: "6 days",
-      rating: 4.7,
-      groupSize: "2-8",
-      bestTime: "Mar-May, Sep-Nov",
-      category: "city",
-    },
-    {
-      id: 4,
-      name: "Egyptian Wonders",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1499,
-      duration: "9 days",
-      rating: 4.6,
-      groupSize: "4-15",
-      bestTime: "Oct-Apr",
-      category: "cultural",
-    },
-    {
-      id: 5,
-      name: "Santorini Getaway",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1299,
-      duration: "5 days",
-      rating: 4.9,
-      groupSize: "2-6",
-      bestTime: "May-Oct",
-      category: "beach",
-    },
-    {
-      id: 6,
-      name: "Amazon Rainforest Expedition",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1799,
-      duration: "7 days",
-      rating: 4.5,
-      groupSize: "4-10",
-      bestTime: "Jun-Sep",
-      category: "adventure",
-    },
-    {
-      id: 7,
-      name: "New York Weekend",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 899,
-      duration: "3 days",
-      rating: 4.4,
-      groupSize: "1-4",
-      bestTime: "All year",
-      category: "city",
-    },
-    {
-      id: 8,
-      name: "Safari in Tanzania",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 2499,
-      duration: "10 days",
-      rating: 4.9,
-      groupSize: "4-12",
-      bestTime: "Jun-Oct",
-      category: "adventure",
-    },
-  ]
+  const [allPackages, setAllPackages] = useState([]);
+  useEffect(() => {
+    const fetchPackages = async () => {
+      // Simulating an API call to fetch packages
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/destinations/`,{
+        method: "GET",
+      }); // Replace with your actual API endpoint
+      const data = await response.json();
+      setAllPackages(data);
+    }
+    fetchPackages();
+  },[]);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -162,12 +84,12 @@ const BrowsePackages = () => {
     }
 
     // Apply rating filter
-    if (filters.rating && pkg.rating < Number.parseFloat(filters.rating)) {
+    if (filters.rating && (pkg.ratings?.average ?? 0) < Number.parseFloat(filters.rating)) {
       return false
     }
 
     // Apply best time filter
-    if (filters.bestTime && !pkg.bestTime.includes(filters.bestTime)) {
+    if (filters.bestTime && !pkg.bestTimeToVisit.includes(filters.bestTime)) {
       return false
     }
 
@@ -344,22 +266,22 @@ const BrowsePackages = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPackages.map((pkg) => (
                     <div
-                      key={pkg.id}
+                      key={pkg._id}
                       className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
                     >
                       <div className="relative">
                         <img
-                          src={pkg.image || "/placeholder.svg"}
+                          src={pkg.imageUrl && pkg.imageUrl.length > 0 ? pkg.imageUrl[0] : "/placeholder.svg"}
                           alt={pkg.name}
                           className="w-full h-48 object-cover"
                         />
                         <div className="absolute top-2 right-2 flex space-x-2">
                           <button
-                            onClick={() => toggleWishlist(pkg.id)}
+                            onClick={() => toggleWishlist(pkg._id)}
                             className={`p-2 rounded-full ${
-                              wishlist.includes(pkg.id) ? "bg-red-500 text-white" : "bg-white text-gray-600"
+                              wishlist.includes(pkg._id) ? "bg-red-500 text-white" : "bg-white text-gray-600"
                             }`}
-                            aria-label={wishlist.includes(pkg.id) ? "Remove from wishlist" : "Add to wishlist"}
+                            aria-label={wishlist.includes(pkg._id) ? "Remove from wishlist" : "Add to wishlist"}
                           >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                               <path
@@ -370,11 +292,11 @@ const BrowsePackages = () => {
                             </svg>
                           </button>
                           <button
-                            onClick={() => toggleSaved(pkg.id)}
+                            onClick={() => toggleSaved(pkg._id)}
                             className={`p-2 rounded-full ${
-                              saved.includes(pkg.id) ? "bg-blue-500 text-white" : "bg-white text-gray-600"
+                              saved.includes(pkg._id) ? "bg-blue-500 text-white" : "bg-white text-gray-600"
                             }`}
-                            aria-label={saved.includes(pkg.id) ? "Remove from saved" : "Save for later"}
+                            aria-label={saved.includes(pkg._id) ? "Remove from saved" : "Save for later"}
                           >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
@@ -390,17 +312,17 @@ const BrowsePackages = () => {
                             <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
-                            <span>{pkg.rating}</span>
+                            <span>{pkg.ratings?.average ?? 0}</span>
                           </div>
                         </div>
                         <div className="text-sm text-gray-600 mb-3">
                           <div>Group size: {pkg.groupSize}</div>
-                          <div>Best time: {pkg.bestTime}</div>
+                          <div>Best time: {pkg.bestTimeToVisit}</div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-xl font-bold text-blue-600">${pkg.price}</span>
+                          <span className="text-xl font-bold text-blue-600">₹{pkg.price}</span>
                           <Link
-                            to={`/package/₹{pkg.id}`}
+                            to={`/package/${pkg._id}`}
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                           >
                             View Details

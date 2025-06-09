@@ -1,45 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 
 const LandingPage = () => {
-  // Mock data for featured packages
-  const featuredPackages = [
-    {
-      id: 1,
-      name: "Bali Paradise Escape",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1299,
-      duration: "7 days",
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: "Swiss Alps Adventure",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1899,
-      duration: "8 days",
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      name: "Tokyo City Explorer",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1599,
-      duration: "6 days",
-      rating: 4.7,
-    },
-    {
-      id: 4,
-      name: "Egyptian Wonders",
-      image: "/lukhnow.jpg?height=200&width=300",
-      price: 1499,
-      duration: "9 days",
-      rating: 4.6,
-    },
-  ];
+  const { isAuthenticated } = useAuth();
+  const [featuredPackages, setFeaturedPackages] = useState([]);
+  const [topDestinations, setTopDestinations] = useState([]);
+
+  // Fetch packages on mount
+  useEffect(() => {
+    const fetchPackages = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/destinations/`
+      );
+      const data = await response.json();
+      // Featured: top 4 by rating or price or any logic you want
+      const sorted = [...data].sort(
+        (a, b) => (b.ratings?.average ?? 0) - (a.ratings?.average ?? 0)
+      );
+      setFeaturedPackages(sorted.slice(0, 4));
+      // Top destinations: unique locations, pick top 6
+      const uniqueLocations = [];
+      const seen = new Set();
+      for (const pkg of data) {
+        if (!seen.has(pkg.location)) {
+          uniqueLocations.push(pkg);
+          seen.add(pkg.location);
+        }
+        if (uniqueLocations.length === 6) break;
+      }
+      setTopDestinations(uniqueLocations);
+    };
+    fetchPackages();
+  }, []);
 
   // Mock data for testimonials
   const testimonials = [
@@ -65,44 +60,6 @@ const LandingPage = () => {
       rating: 4,
     },
   ];
-
-  // Mock data for top destinations
-  const topDestinations = [
-    {
-      id: 1,
-      name: "Paris, France",
-      image: "/lukhnow.jpg?height=200&width=300",
-    },
-    {
-      id: 2,
-      name: "Santorini, Greece",
-      image: "/lukhnow.jpg?height=200&width=300",
-    },
-    {
-      id: 3,
-      name: "Kyoto, Japan",
-      image: "/lukhnow.jpg?height=200&width=300",
-    },
-    {
-      id: 4,
-      name: "New York, USA",
-      image: "/placeholder.svg?height=150&width=200",
-    },
-    {
-      id: 5,
-      name: "Machu Picchu, Peru",
-      image: "/placeholder.svg?height=150&width=200",
-    },
-    {
-      id: 6,
-      name: "Sydney, Australia",
-      image: "/placeholder.svg?height=150&width=200",
-    },
-  ];
-
-  const { isAuthenticated } = useAuth();
-  const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -176,11 +133,15 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredPackages.map((pkg) => (
               <div
-                key={pkg.id}
+                key={pkg._id}
                 className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
               >
                 <img
-                  src={pkg.image || "/placeholder.svg"}
+                  src={
+                    pkg.imageUrl && pkg.imageUrl.length > 0
+                      ? pkg.imageUrl[0]
+                      : "/placeholder.svg"
+                  }
                   alt={pkg.name}
                   className="w-full h-48 object-cover"
                 />
@@ -196,7 +157,7 @@ const LandingPage = () => {
                       >
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
-                      <span>{pkg.rating}</span>
+                      <span>{pkg.ratings?.average ?? 0}</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
@@ -204,7 +165,7 @@ const LandingPage = () => {
                       ₹{pkg.price}
                     </span>
                     <Link
-                      to={`/package/₹{pkg.id}`}
+                      to={`/package/${pkg._id}`}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-purple-500 transition duration-300"
                     >
                       View Details
@@ -376,17 +337,21 @@ const LandingPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {topDestinations.map((destination) => (
               <div
-                key={destination.id}
+                key={destination._id}
                 className="relative group overflow-hidden rounded-lg shadow-md"
               >
                 <img
-                  src={destination.image || "/placeholder.svg"}
-                  alt={destination.name}
+                  src={
+                    destination.imageUrl && destination.imageUrl.length > 0
+                      ? destination.imageUrl[0]
+                      : "/placeholder.svg"
+                  }
+                  alt={destination.location}
                   className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                   <h3 className="text-white font-medium p-3">
-                    {destination.name}
+                    {destination.location}
                   </h3>
                 </div>
               </div>
@@ -423,7 +388,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
 
       <Footer />
     </div>

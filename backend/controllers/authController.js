@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Profile = require("../models/profile");
 const Destination = require("../models/destination");
+const { uploadImage } = require("../utils/uploader");
 const dotenv = require("dotenv");
 // const { handleCreateProfile } = require("./profileController");
 dotenv.config();
@@ -247,49 +248,116 @@ exports.handleUpdateProfile = async (req, res) => {
   }
 };
 
+exports.handleImageUpload = async (files, title) => {
+  const uploadedImages = [];
+  for (const file of files) {
+    if (!file.buffer || file.buffer.length === 0) {
+      console.warn("Skipping empty file:", file.originalname);
+      continue;
+    }
+    console.log("Uploading file:", file.originalname, file.buffer.length);
+    const result = await uploadImage(file.buffer, title);
+    if (!result || !result.secure_url) {
+      throw new Error("Image upload failed");
+    }
+    uploadedImages.push(result.secure_url);
+  }
+  return {
+    success: true,
+    message: "Images uploaded successfully",
+    urls: uploadedImages,
+  };
+};
+
 exports.handleAddDestination = async (req, res) => {
   const {
     name,
     description,
-    highlights,
     bestTimeToVisit,
     groupSize,
     duration,
     location,
-    images,
     price,
     availability,
-    itinerary,
-    whatIncluded,
-    whatNotIncluded,
     cancellationPolicy,
     termsAndConditions,
-    tourOperator,
   } = req.body;
+
+  // For simple arrays sent as multiple field[] entries
+  const highlights = Array.isArray(req.body.highlights)
+    ? req.body.highlights
+    : [req.body.highlights].filter(Boolean);
+  const whatIncluded = Array.isArray(req.body.whatIncluded)
+    ? req.body.whatIncluded
+    : [req.body.whatIncluded].filter(Boolean);
+  const whatNotIncluded = Array.isArray(req.body.whatNotIncluded)
+    ? req.body.whatNotIncluded
+    : [req.body.whatNotIncluded].filter(Boolean);
+
+  // For arrays of objects sent as JSON strings
+  let itinerary = [];
+  if (Array.isArray(req.body.itinerary)) {
+    itinerary = req.body.itinerary.map((item) => {
+      try {
+        return JSON.parse(item);
+      } catch {
+        return {};
+      }
+    });
+  } else if (req.body.itinerary) {
+    try {
+      itinerary = [JSON.parse(req.body.itinerary)];
+    } catch {
+      itinerary = [];
+    }
+  }
+
+  let tourOperator = [];
+  if (Array.isArray(req.body.tourOperator)) {
+    tourOperator = req.body.tourOperator.map((item) => {
+      try {
+        return JSON.parse(item);
+      } catch {
+        return {};
+      }
+    });
+  } else if (req.body.tourOperator) {
+    try {
+      tourOperator = [JSON.parse(req.body.tourOperator)];
+    } catch {
+      tourOperator = [];
+    }
+  }
+
+  const images = req.files;
+
   try {
     const itineraryObject = itinerary.map((item) => ({
       day: item.day,
       activities: item.activities,
     }));
+
+    // FIXED: Properly await and destructure image URLs
+    const { urls: imageUrls } = await exports.handleImageUpload(images, name);
+
     const destinationData = await Destination.create({
-      name: name,
-      description: description,
-      highlights: highlights,
-      bestTimeToVisit: bestTimeToVisit,
-      groupSize: groupSize,
-      duration: duration,
-      location: location,
-      images: images,
-      price: price,
-      availability: availability,
+      name,
+      description,
+      highlights,
+      bestTimeToVisit,
+      groupSize,
+      duration,
+      location,
+      imageUrl: imageUrls, // <-- match your schema!
+      price,
+      availability,
       itinerary: itineraryObject,
       included: whatIncluded,
       notIncluded: whatNotIncluded,
-      cancellationPolicy: cancellationPolicy,
-      termsAndConditions: termsAndConditions,
-      tourOperator: tourOperator,
+      cancellationPolicy,
+      termsAndConditions,
+      tourOperator,
     });
-    console.log("Destination added successfully", destinationData);
     res.status(201).json({
       success: true,
       message: "Destination added successfully",

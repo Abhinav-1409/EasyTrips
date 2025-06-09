@@ -150,8 +150,9 @@ const AddDestination = () => {
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files)
         if (formData.images.length + files.length <= 10) {
+            console.log("Selected files:", files);
             const newImages = files.map((file) => ({
-                file,
+                file: file,
                 preview: URL.createObjectURL(file),
                 name: file.name,
             }))
@@ -172,23 +173,73 @@ const AddDestination = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        console.log("Form Data:", formData)
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/add-destination`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`,
-            },
-            body: JSON.stringify(formData),
+        e.preventDefault();
+
+        // Build FormData for multipart/form-data
+        const formDataToSend = new FormData();
+
+        // Append simple fields
+        formDataToSend.append("name", formData.name);
+        formDataToSend.append("description", formData.description);
+        formDataToSend.append("bestTimeToVisit", formData.bestTimeToVisit);
+        formDataToSend.append("groupSize", formData.groupSize);
+        formDataToSend.append("duration", formData.duration);
+        formDataToSend.append("location", formData.location);
+        formDataToSend.append("price", formData.price);
+        formDataToSend.append("availability", formData.availability);
+        formDataToSend.append("cancellationPolicy", formData.cancellationPolicy);
+        formDataToSend.append("termsAndConditions", formData.termsAndConditions);
+
+        // Append array fields
+        formData.highlights.forEach((highlight) => {
+            formDataToSend.append("highlights[]", highlight);
         });
-        const data = await response.json();
-        console.log("Response Data:", data);
-        if (response.ok) {
-            toast.success("Tour package created successfully!");
-            navigate("/dashboard");
-        } else {
-            toast.error(data.message || "Failed to create tour package");
+        formData.whatIncluded.forEach((item) => {
+            formDataToSend.append("whatIncluded[]", item);
+        });
+        formData.whatNotIncluded.forEach((item) => {
+            formDataToSend.append("whatNotIncluded[]", item);
+        });
+
+        // Append itinerary as JSON strings
+        formData.itinerary.forEach((day) => {
+            formDataToSend.append("itinerary[]", JSON.stringify(day));
+        });
+
+        // Append tourOperator as JSON strings
+        formData.tourOperator.forEach((operator) => {
+            formDataToSend.append("tourOperator[]", JSON.stringify(operator));
+        });
+
+        // Append images (actual files)
+        formData.images.forEach((imgObj) => {
+            if (imgObj.file) {
+                formDataToSend.append("images", imgObj.file);
+            }
+        });
+
+        try {
+            for (let pair of formDataToSend.entries()) {
+                console.log(pair[0], typeof pair[1]);
+            }
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/add-destination`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    // DO NOT set Content-Type here, browser will set it automatically for FormData
+                },
+                body: formDataToSend,
+            });
+            const data = await response.json();
+            if (response.ok) {
+                toast.success("Tour package created successfully!");
+                navigate("/dashboard");
+            } else {
+                toast.error(data.message || "Failed to create tour package");
+            }
+        } catch (error) {
+            toast.error("An error occurred while creating the package");
+            console.error(error);
         }
     }
 

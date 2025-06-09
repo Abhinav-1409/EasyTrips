@@ -233,17 +233,18 @@ const PackageDetails = () => {
               <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
                 <div className="relative h-96">
                   <img
-                    src={packageData.image && packageData.images[activeImage] || "/placeholder.svg"}
+                    src={packageData.imageUrl && packageData.imageUrl[activeImage] || "/placeholder.svg"}
                     alt={`₹{packageData.name} - Image ₹{activeImage + 1}`}
                     className="w-full h-full object-cover"
                   />
 
                   {/* Navigation Arrows */}
-                  {packageData.image && packageData.images.length > 1 && (
+                  {packageData.imageUrl && packageData.imageUrl.length > 1 && (
                     <>
                       <button
+                        aria-label="Previous image"
                         onClick={() =>
-                          setActiveImage((prev) => (prev === 0 ? packageData.images.length - 1 : prev - 1))
+                          setActiveImage((prev) => (prev === 0 ? packageData.imageUrl.length - 1 : prev - 1))
                         }
                         className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
                       >
@@ -253,7 +254,7 @@ const PackageDetails = () => {
                       </button>
                       <button
                         onClick={() =>
-                          setActiveImage((prev) => (prev === packageData.images.length - 1 ? 0 : prev + 1))
+                          setActiveImage((prev) => (prev === packageData.imageUrl.length - 1 ? 0 : prev + 1))
                         }
                         className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
                       >
@@ -266,9 +267,9 @@ const PackageDetails = () => {
                 </div>
 
                 {/* Thumbnail Gallery */}
-                {packageData.image && packageData.images.length > 1 && (
+                {packageData.imageUrl && packageData.imageUrl.length > 1 && (
                   <div className="flex p-2 overflow-x-auto">
-                    {packageData.image && packageData.images.map((image, index) => (
+                    {packageData.imageUrl && packageData.imageUrl.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setActiveImage(index)}
@@ -609,7 +610,7 @@ const PackageDetails = () => {
                   Have questions about this tour? Our travel experts are ready to assist you.
                 </p>
                 <div className="space-y-3">
-                  <a href="tel:+15551234567" className="flex items-center text-blue-600 hover:text-blue-800">
+                  <a href="tel:+918299359282" className="flex items-center text-blue-600 hover:text-blue-800">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -618,9 +619,9 @@ const PackageDetails = () => {
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                       />
                     </svg>
-                    +1 (555) 123-4567
+                    +91 8299359282
                   </a>
-                  <a href="mailto:support@tourease.com" className="flex items-center text-blue-600 hover:text-blue-800">
+                  <a href="mailto:ankityadav8299blp@gmail.com" className="flex items-center text-blue-600 hover:text-blue-800">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -629,7 +630,7 @@ const PackageDetails = () => {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    support@tourease.com
+                    ankityadav8299blp@gmail.com
                   </a>
                 </div>
               </div>

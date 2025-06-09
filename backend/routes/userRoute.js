@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer(); 
 const {
   signup,
   signin,
@@ -23,7 +25,7 @@ router.get("/logout", logout);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.route("/profile").get(handleGetProfile).post(handleUpdateProfile);
-router.post("/add-destination", handleAddDestination);
+router.post("/add-destination",upload.array("images", 10), handleAddDestination);
 router.get("/destinations", handleGetDestinations);
 router.get("/destination/:id", handleGetDestinationById); 
 
