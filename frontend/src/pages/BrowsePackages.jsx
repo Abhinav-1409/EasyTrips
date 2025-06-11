@@ -1,24 +1,29 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import Navbar from "../components/Navbar"
-import Footer from "../components/Footer"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
 
 const BrowsePackages = () => {
   // Mock data for tour packages
   const [allPackages, setAllPackages] = useState([]);
+  const { isAuthenticated, logout, role } = useAuth();
   useEffect(() => {
     const fetchPackages = async () => {
       // Simulating an API call to fetch packages
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/destinations/`,{
-        method: "GET",
-      }); // Replace with your actual API endpoint
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/destinations/`,
+        {
+          method: "GET",
+        }
+      ); // Replace with your actual API endpoint
       const data = await response.json();
       setAllPackages(data);
-    }
+    };
     fetchPackages();
-  },[]);
+  }, []);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -27,92 +32,122 @@ const BrowsePackages = () => {
     rating: "",
     bestTime: "",
     category: "",
-  })
+  });
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Wishlist and Saved states
-  const [wishlist, setWishlist] = useState([])
-  const [saved, setSaved] = useState([])
+  const [wishlist, setWishlist] = useState([]);
+  const [saved, setSaved] = useState([]);
 
   // Handle filter changes
   const handleFilterChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFilters({
       ...filters,
       [name]: value,
-    })
-  }
+    });
+  };
 
   // Handle search input
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value)
-  }
+    setSearchQuery(e.target.value);
+  };
 
   // Toggle wishlist
   const toggleWishlist = (packageId) => {
     if (wishlist.includes(packageId)) {
-      setWishlist(wishlist.filter((id) => id !== packageId))
+      setWishlist(wishlist.filter((id) => id !== packageId));
     } else {
-      setWishlist([...wishlist, packageId])
+      setWishlist([...wishlist, packageId]);
     }
-  }
+  };
 
   // Toggle saved
   const toggleSaved = (packageId) => {
     if (saved.includes(packageId)) {
-      setSaved(saved.filter((id) => id !== packageId))
+      setSaved(saved.filter((id) => id !== packageId));
     } else {
-      setSaved([...saved, packageId])
+      setSaved([...saved, packageId]);
     }
-  }
+  };
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(
+        ` ${import.meta.env.VITE_API_URL}/package/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (res.ok) {
+        // Remove from local state if you're storing it
+        setAllPackages((prev) => prev.filter((pkg) => pkg._id !== id));
+      } else {
+        message.error("Failed to delete package");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
 
   // Apply filters and search
   const filteredPackages = allPackages.filter((pkg) => {
     // Apply duration filter
-    if (filters.duration && !pkg.duration.includes(filters.duration.split(" ")[0])) {
-      return false
+    if (
+      filters.duration &&
+      !pkg.duration.includes(filters.duration.split(" ")[0])
+    ) {
+      return false;
     }
 
     // Apply price range filter
     if (filters.priceRange) {
-      const [min, max] = filters.priceRange.split("-").map(Number)
+      const [min, max] = filters.priceRange.split("-").map(Number);
       if (pkg.price < min || (max && pkg.price > max)) {
-        return false
+        return false;
       }
     }
 
     // Apply rating filter
-    if (filters.rating && (pkg.ratings?.average ?? 0) < Number.parseFloat(filters.rating)) {
-      return false
+    if (
+      filters.rating &&
+      (pkg.ratings?.average ?? 0) < Number.parseFloat(filters.rating)
+    ) {
+      return false;
     }
 
     // Apply best time filter
     if (filters.bestTime && !pkg.bestTimeToVisit.includes(filters.bestTime)) {
-      return false
+      return false;
     }
 
     // Apply category filter
     if (filters.category && pkg.category !== filters.category) {
-      return false
+      return false;
     }
 
     // Apply search query
-    if (searchQuery && !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false
+    if (
+      searchQuery &&
+      !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
+      return false;
     }
 
-    return true
-  })
+    return true;
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar/>
+      <Navbar />
 
       <main className="flex-grow bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Browse Tour Packages</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">
+            Browse Tour Packages
+          </h1>
 
           {/* Search Bar */}
           <div className="mb-8">
@@ -150,7 +185,9 @@ const BrowsePackages = () => {
                 <div className="space-y-6">
                   {/* Duration Filter */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Duration
+                    </label>
                     <select
                       name="duration"
                       value={filters.duration}
@@ -166,7 +203,9 @@ const BrowsePackages = () => {
 
                   {/* Price Range Filter */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Price Range
+                    </label>
                     <select
                       name="priceRange"
                       value={filters.priceRange}
@@ -183,7 +222,9 @@ const BrowsePackages = () => {
 
                   {/* Rating Filter */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Customer Rating</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Customer Rating
+                    </label>
                     <select
                       name="rating"
                       value={filters.rating}
@@ -199,7 +240,9 @@ const BrowsePackages = () => {
 
                   {/* Best Time Filter */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Best Time to Visit</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Best Time to Visit
+                    </label>
                     <select
                       name="bestTime"
                       value={filters.bestTime}
@@ -224,7 +267,9 @@ const BrowsePackages = () => {
 
                   {/* Category Filter */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category
+                    </label>
                     <select
                       name="category"
                       value={filters.category}
@@ -249,8 +294,8 @@ const BrowsePackages = () => {
                         rating: "",
                         bestTime: "",
                         category: "",
-                      })
-                      setSearchQuery("")
+                      });
+                      setSearchQuery("");
                     }}
                     className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition duration-300"
                   >
@@ -271,19 +316,52 @@ const BrowsePackages = () => {
                     >
                       <div className="relative">
                         <img
-                          src={pkg.imageUrl && pkg.imageUrl.length > 0 ? pkg.imageUrl[0] : "/placeholder.svg"}
+                          src={
+                            pkg.imageUrl && pkg.imageUrl.length > 0
+                              ? pkg.imageUrl[0]
+                              : "/placeholder.svg"
+                          }
                           alt={pkg.name}
                           className="w-full h-48 object-cover"
                         />
                         <div className="absolute top-2 right-2 flex space-x-2">
+                          {role === "Admin" && (
+                            <button
+                              onClick={() => handleDelete(pkg._id)}
+                              className="p-2 rounded-full bg-white text-red-600 hover:bg-red-100"
+                              aria-label="Delete Package"
+                            >
+                              <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M6 2a1 1 0 011-1h6a1 1 0 011 1v1h3a1 1 0 110 2h-1v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5H2a1 1 0 110-2h3V2zm2 3a1 1 0 00-1 1v9a1 1 0 102 0V6a1 1 0 00-1-1zm4 0a1 1 0 00-1 1v9a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          )}
                           <button
                             onClick={() => toggleWishlist(pkg._id)}
                             className={`p-2 rounded-full ${
-                              wishlist.includes(pkg._id) ? "bg-red-500 text-white" : "bg-white text-gray-600"
+                              wishlist.includes(pkg._id)
+                                ? "bg-red-500 text-white"
+                                : "bg-white text-gray-600"
                             }`}
-                            aria-label={wishlist.includes(pkg._id) ? "Remove from wishlist" : "Add to wishlist"}
+                            aria-label={
+                              wishlist.includes(pkg._id)
+                                ? "Remove from wishlist"
+                                : "Add to wishlist"
+                            }
                           >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path
                                 fillRule="evenodd"
                                 d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
@@ -294,22 +372,38 @@ const BrowsePackages = () => {
                           <button
                             onClick={() => toggleSaved(pkg._id)}
                             className={`p-2 rounded-full ${
-                              saved.includes(pkg._id) ? "bg-blue-500 text-white" : "bg-white text-gray-600"
+                              saved.includes(pkg._id)
+                                ? "bg-blue-500 text-white"
+                                : "bg-white text-gray-600"
                             }`}
-                            aria-label={saved.includes(pkg._id) ? "Remove from saved" : "Save for later"}
+                            aria-label={
+                              saved.includes(pkg._id)
+                                ? "Remove from saved"
+                                : "Save for later"
+                            }
                           >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                             </svg>
                           </button>
                         </div>
                       </div>
                       <div className="p-4">
-                        <h3 className="text-lg font-semibold mb-2">{pkg.name}</h3>
+                        <h3 className="text-lg font-semibold mb-2">
+                          {pkg.name}
+                        </h3>
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-gray-600">{pkg.duration}</span>
                           <div className="flex items-center">
-                            <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="w-4 h-4 text-yellow-400 mr-1"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                             <span>{pkg.ratings?.average ?? 0}</span>
@@ -320,7 +414,9 @@ const BrowsePackages = () => {
                           <div>Best time: {pkg.bestTimeToVisit}</div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-xl font-bold text-blue-600">₹{pkg.price}</span>
+                          <span className="text-xl font-bold text-blue-600">
+                            ₹{pkg.price}
+                          </span>
                           <Link
                             to={`/package/${pkg._id}`}
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
@@ -334,7 +430,9 @@ const BrowsePackages = () => {
                 </div>
               ) : (
                 <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                  <p className="text-lg text-gray-600 mb-4">No packages found matching your criteria.</p>
+                  <p className="text-lg text-gray-600 mb-4">
+                    No packages found matching your criteria.
+                  </p>
                   <button
                     onClick={() => {
                       setFilters({
@@ -343,8 +441,8 @@ const BrowsePackages = () => {
                         rating: "",
                         bestTime: "",
                         category: "",
-                      })
-                      setSearchQuery("")
+                      });
+                      setSearchQuery("");
                     }}
                     className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                   >
@@ -359,7 +457,7 @@ const BrowsePackages = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default BrowsePackages
+export default BrowsePackages;

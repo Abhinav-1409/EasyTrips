@@ -29,4 +29,20 @@ router.post("/add-destination",upload.array("images", 10), handleAddDestination)
 router.get("/destinations", handleGetDestinations);
 router.get("/destination/:id", handleGetDestinationById); 
 
+const Package = require("../models/destination");
+
+// DELETE /api/packages/:id
+router.delete("/package/:id", async (req, res) => {
+  try {
+    const deleted = await Package.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.json({ message: "Package deleted" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
