@@ -6,7 +6,6 @@ import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"
 import BrowsePackages from "./pages/BrowsePackages"
 import Wishlist from "./pages/Wishlist"
-import Saved from "./pages/Saved"
 import Checkout from "./pages/Checkout"
 import MyOrders from "./pages/MyOrders"
 import Profile from "./pages/Profile"
@@ -29,7 +28,7 @@ function AppRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/package/:id" element={<PackageDetails />} />
+      <Route path="/destination/:id" element={<PackageDetails />} />
       <Route path="/help" element={<Help />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
@@ -58,14 +57,6 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Wishlist />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/saved"
-        element={
-          <ProtectedRoute>
-            <Saved />
           </ProtectedRoute>
         }
       />

@@ -469,3 +469,26 @@ exports.handleRemoveFromWishlist = async (req, res) => {
     });
   }
 };
+
+exports.handleGetWishlist = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    const destinations = await Destination.find({
+      wishlistedBy: user._id});
+      // console.log("Destinations in wishlist:", destinations);
+    if (!destinations || destinations.length === 0) {
+      return res.status(404).json({ message: "No wishlist items found" });
+    }
+    res.status(200).json({ wishlistItems: destinations });
+  }
+  catch (error) {
+    console.error("Error fetching wishlist items:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching wishlist items",
+      error: error.message,
+    });
+  }
+};

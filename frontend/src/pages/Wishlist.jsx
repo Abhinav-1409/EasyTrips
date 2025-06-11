@@ -1,55 +1,61 @@
 import React from "react";
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const Wishlist = () => {
   // Mock data for wishlist items
-  const [wishlistItems, setWishlistItems] = useState([
-    {
-      id: 1,
-      name: "Bali Paradise Escape",
-      image: "/placeholder.svg?height=200&width=300",
-      price: 1299,
-      duration: "7 days",
-      rating: 4.8,
-      bestTime: "Apr-Oct",
-    },
-    {
-      id: 3,
-      name: "Tokyo City Explorer",
-      image: "/placeholder.svg?height=200&width=300",
-      price: 1599,
-      duration: "6 days",
-      rating: 4.7,
-      bestTime: "Mar-May, Sep-Nov",
-    },
-    {
-      id: 5,
-      name: "Santorini Getaway",
-      image: "/placeholder.svg?height=200&width=300",
-      price: 1299,
-      duration: "5 days",
-      rating: 4.9,
-      bestTime: "May-Oct",
-    },
-  ])
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   // Remove from wishlist
-  const removeFromWishlist = (id) => {
-    setWishlistItems(wishlistItems.filter((item) => item.id !== id))
+  const removeFromWishlist = async (id) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/${id}/rem`,{
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+    console.log("Remove from wishlist response:", data);
+    if (!response.ok) {
+      toast.error("Failed to remove item from wishlist. Please try again.");
+      return;
+    }
+    setWishlistItems((prevWishlist) =>
+      prevWishlist.filter((item) => String(item._id) !== String(id))
+    );
+
+    toast.success("Removed from wishlist!");
   }
 
-  // Move to saved
-  const moveToSaved = (id) => {
-    // In a real app, this would call an API to update the user's saved items
-    // For now, we'll just remove it from the wishlist
-    removeFromWishlist(id)
-    // Show a success message (in a real app)
-    alert("Package moved to Saved items")
-  }
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data  = await response.json();
+      console.log("Wishlist items fetched:", data);
+      if (!response.ok) {
+        toast.error("Failed to fetch wishlist items. Please refresh the page.");
+        console.error("Error fetching wishlist items:", data.message);
+      }
+      else {
+        setWishlistItems(data.wishlistItems);
+      }
+    }
+    fetchWishlist();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -63,13 +69,13 @@ const Wishlist = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {wishlistItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item._id}
                   className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl"
                 >
                   <div className="relative">
-                    <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-full h-48 object-cover" />
+                    <img src={item?.imageUrl?.[0] || "/placeholder.svg"} alt={item.name} className="w-full h-48 object-cover" />
                     <button
-                      onClick={() => removeFromWishlist(item.id)}
+                      onClick={() => removeFromWishlist(item._id)}
                       className="absolute top-2 right-2 p-2 bg-white rounded-full text-red-500 hover:bg-red-500 hover:text-white transition-colors duration-300"
                       aria-label="Remove from wishlist"
                     >
@@ -97,14 +103,8 @@ const Wishlist = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold text-blue-600">₹{item.price}</span>
                       <div className="flex space-x-2">
-                        <button
-                          onClick={() => moveToSaved(item.id)}
-                          className="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition duration-300"
-                        >
-                          Save for Later
-                        </button>
                         <Link
-                          to={`/package/₹{item.id}`}
+                          to={`/destination/${item._id}`}
                           className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
                         >
                           View Details

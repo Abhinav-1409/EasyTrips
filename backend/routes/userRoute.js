@@ -13,7 +13,8 @@ const {
   handleGetDestinationById,
   handleDeleteDestination,
   handleAddToWishlist,
-  handleRemoveFromWishlist
+  handleRemoveFromWishlist,
+  handleGetWishlist
 } = require("../controllers/authController");
 const verifyUser = require("../middlewares/auth");
 const {
@@ -33,5 +34,6 @@ router.get("/destinations", handleGetDestinations);
 router.route("/destination/:id").get(handleGetDestinationById).delete(handleDeleteDestination);
 router.patch("/wishlist/:id/add", handleAddToWishlist);
 router.patch("/wishlist/:id/rem", handleRemoveFromWishlist);
+router.get("/wishlist", handleGetWishlist);
 
 module.exports = router;

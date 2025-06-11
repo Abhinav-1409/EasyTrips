@@ -165,7 +165,7 @@ const LandingPage = () => {
                       ₹{pkg.price}
                     </span>
                     <Link
-                      to={`/package/${pkg._id}`}
+                      to={`/destination/${pkg._id}`}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-purple-500 transition duration-300"
                     >
                       View Details

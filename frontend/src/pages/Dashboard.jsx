@@ -202,7 +202,7 @@ const Dashboard = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold text-blue-500">₹{pkg.price}</span>
                       <Link
-                        to={`/package/₹{pkg.id}`}
+                        to={`/destination/${pkg.id}`}
                         className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition duration-300"
                       >
                         View Details
