@@ -4,8 +4,12 @@ import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext"
 
 const PackageDetails = () => {
+  const { user } = useAuth();
   const { id } = useParams();
   const [packageData, setPackageData] = useState({})
 
@@ -137,11 +141,15 @@ const PackageDetails = () => {
       const data = await response.json();
       console.log(data);
       setPackageData(data.destination);
+      // console.log("user", user._id);
+      setIsInWishlist(data.destination.wishlistedBy.some(
+        (id) => id.toString() === user?._id.toString()
+      ))
       return data;
     }
     fetchPackageData();
     // setPackageData(data.destination);
-  }, [id])
+  }, [id,user])
 
   // State for active image
   const [activeImage, setActiveImage] = useState(0)
@@ -151,7 +159,6 @@ const PackageDetails = () => {
 
   // State for wishlist and saved
   const [isInWishlist, setIsInWishlist] = useState(false)
-  const [isInSaved, setIsInSaved] = useState(false)
 
   // State for booking
   const [bookingData, setBookingData] = useState({
@@ -169,14 +176,24 @@ const PackageDetails = () => {
   }
 
   // Toggle wishlist
-  const toggleWishlist = () => {
-    setIsInWishlist(!isInWishlist)
+  const toggleWishlist = async (id) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/${id}/${isInWishlist ? "rem" : "add"}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      toast.error(data.message || "Failed to toggle wishlist");
+      console.error("Error toggling wishlist:", data.message);
+      return;
+    }
+    toast.success(data.message);
+    setIsInWishlist(data.isInWishlist);
   }
 
-  // Toggle saved
-  const toggleSaved = () => {
-    setIsInSaved(!isInSaved)
-  }
 
   // Calculate total price
   const calculateTotalPrice = () => {
@@ -547,8 +564,8 @@ const PackageDetails = () => {
 
                       <div className="flex space-x-2">
                         <button
-                          onClick={toggleWishlist}
-                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
+                          onClick={() => toggleWishlist(packageData._id)}
+                          className={`cursor-pointer flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
                             isInWishlist
                               ? "bg-red-50 text-red-600 border-red-600"
                               : "border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -572,7 +589,7 @@ const PackageDetails = () => {
                           </span>
                         </button>
 
-                        <button
+                        {/* <button
                           onClick={toggleSaved}
                           className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
                             isInSaved
@@ -596,7 +613,7 @@ const PackageDetails = () => {
                             </svg>
                             Save
                           </span>
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

@@ -16,6 +16,7 @@ const verifyUser = (req, res, next) => {
     console.log('verified');
     next();
   } catch (error) {
+    console.log("error in auth middleware", error);
     return res.json({ error: error.message });
   }
 };

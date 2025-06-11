@@ -407,3 +407,65 @@ exports.handleGetDestinationById = async (req, res) => {
     });
   }
 };
+exports.handleDeleteDestination = async (req, res) => {
+  try {
+    const deleted = await Destination.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.json({ message: "Package deleted" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.handleAddToWishlist = async (req, res) => {
+  const destinationId = req.params.id;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    await Destination.updateOne(
+      { _id: destinationId },
+      { $push: { wishlistedBy: user._id } },
+      { new: true, upsert: true }
+    );
+    res
+      .status(200)
+      .json({ isInWishlist: true, message: "Added to wishlist successfully" });
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding to wishlist",
+      error: error.message,
+    });
+  }
+};
+
+exports.handleRemoveFromWishlist = async (req, res) => {
+  const destinationId = req.params.id;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    await Destination.updateOne(
+      { _id: destinationId },
+      { $pull: { wishlistedBy: user._id } },
+      { new: true, upsert: true }
+    );
+    res
+      .status(200)
+      .json({
+        isInWishlist: false,
+        message: "Removed from wishlist successfully",
+      });
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding to wishlist",
+      error: error.message,
+    });
+  }
+};

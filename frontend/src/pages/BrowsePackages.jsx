@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BrowsePackages = () => {
   // Mock data for tour packages
   const [allPackages, setAllPackages] = useState([]);
-  const { isAuthenticated, logout, role } = useAuth();
+  const { user, role } = useAuth();
   useEffect(() => {
     const fetchPackages = async () => {
       // Simulating an API call to fetch packages
@@ -21,9 +23,10 @@ const BrowsePackages = () => {
       ); // Replace with your actual API endpoint
       const data = await response.json();
       setAllPackages(data);
+      setWishlist(data.filter((pkg) => pkg.wishlistedBy.includes(user?._id)).map((pkg) => pkg._id));
     };
     fetchPackages();
-  }, []);
+  }, [user?._id]);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -39,7 +42,6 @@ const BrowsePackages = () => {
 
   // Wishlist and Saved states
   const [wishlist, setWishlist] = useState([]);
-  const [saved, setSaved] = useState([]);
 
   // Handle filter changes
   const handleFilterChange = (e) => {
@@ -56,26 +58,35 @@ const BrowsePackages = () => {
   };
 
   // Toggle wishlist
-  const toggleWishlist = (packageId) => {
-    if (wishlist.includes(packageId)) {
-      setWishlist(wishlist.filter((id) => id !== packageId));
+  const toggleWishlist = async (id) => {
+    const isInWishlist = wishlist.includes(id);
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/${id}/${isInWishlist ? "rem" : "add"}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      toast.error(data.message || "Failed to toggle wishlist");
+      console.error("Error toggling wishlist:", data.message);
+      return;
+    }
+    toast.success(data.message);
+    if (isInWishlist) {
+      setWishlist(wishlist.filter((wId) => String(wId) !== String(id)));
     } else {
-      setWishlist([...wishlist, packageId]);
+      setWishlist([...wishlist, id]);
     }
   };
 
-  // Toggle saved
-  const toggleSaved = (packageId) => {
-    if (saved.includes(packageId)) {
-      setSaved(saved.filter((id) => id !== packageId));
-    } else {
-      setSaved([...saved, packageId]);
-    }
-  };
+
   const handleDelete = async (id) => {
     try {
       const res = await fetch(
-        ` ${import.meta.env.VITE_API_URL}/package/${id}`,
+        ` ${import.meta.env.VITE_API_URL}/destination/${id}`,
         {
           method: "DELETE",
         }
@@ -83,9 +94,10 @@ const BrowsePackages = () => {
 
       if (res.ok) {
         // Remove from local state if you're storing it
+        toast.success("Package deleted successfully");
         setAllPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       } else {
-        message.error("Failed to delete package");
+        toast.error("Failed to delete package");
       }
     } catch (error) {
       console.error("Delete error:", error);
@@ -265,7 +277,7 @@ const BrowsePackages = () => {
                     </select>
                   </div>
 
-                  {/* Category Filter */}
+                  {/* Category Filter
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Category
@@ -283,7 +295,7 @@ const BrowsePackages = () => {
                       <option value="cultural">Cultural</option>
                       <option value="adventure">Adventure</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   {/* Reset Filters Button */}
                   <button
@@ -346,11 +358,10 @@ const BrowsePackages = () => {
                           )}
                           <button
                             onClick={() => toggleWishlist(pkg._id)}
-                            className={`p-2 rounded-full ${
-                              wishlist.includes(pkg._id)
+                            className={`p-2 rounded-full ${wishlist.includes(pkg._id)
                                 ? "bg-red-500 text-white"
                                 : "bg-white text-gray-600"
-                            }`}
+                              }`}
                             aria-label={
                               wishlist.includes(pkg._id)
                                 ? "Remove from wishlist"
@@ -369,7 +380,7 @@ const BrowsePackages = () => {
                               />
                             </svg>
                           </button>
-                          <button
+                          {/* <button
                             onClick={() => toggleSaved(pkg._id)}
                             className={`p-2 rounded-full ${
                               saved.includes(pkg._id)
@@ -389,7 +400,7 @@ const BrowsePackages = () => {
                             >
                               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                             </svg>
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                       <div className="p-4">
