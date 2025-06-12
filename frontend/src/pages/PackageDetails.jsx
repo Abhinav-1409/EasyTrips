@@ -385,7 +385,7 @@ const PackageDetails = () => {
             {/* Right Column: Booking and Actions */}
             <div className="lg:col-span-1">
               {/* Booking Form */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 sticky top-8">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 top-8">
                 <div className="p-6">
                   <h2 className="text-xl font-semibold mb-4">Book This Tour</h2>
 

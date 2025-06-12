@@ -56,7 +56,7 @@ const LandingPage = () => {
       id: 3,
       name: "Emily Rodriguez",
       image: "/emma.jpg?height=200&width=300",
-      text: "I was hesitant to book a solo trip, but TourEase made it so easy and safe. I had an incredible time in Japan!",
+      text: "I was hesitant to book a solo trip, but EasyTrips made it so easy and safe. I had an incredible time in Japan!",
       rating: 4,
     },
   ];
@@ -68,7 +68,7 @@ const LandingPage = () => {
       {/* <section className="bg-gradient-to-r from-blue-400 to-purple-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-6">Discover the World with TourEase</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-6">Discover the World with EasyTrips</h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
               Book your dream vacation with our expertly curated tour packages. Adventure awaits!
             </p>
@@ -99,7 +99,10 @@ const LandingPage = () => {
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-black">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-6">
-            Discover the World with <span className="text-black">TourEase</span>
+            Discover the World with{" "} 
+            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              EasyTrips
+            </span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
             Book your dream vacation with our expertly curated tour packages.
@@ -108,14 +111,14 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/browse"
-              className="px-8 py-3 bg-white text-blue-500 font-bold rounded-full hover:bg-gray-300 transition duration-300"
+              className="px-8 py-3 text-white bg-gradient-to-r from-blue-500 to-cyan-400 font-semibold rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
             >
               Browse Packages
             </Link>
             {!isAuthenticated && (
               <Link
                 to="/signup"
-                className="px-8 py-3 border-2 bg-white text-blue-500 font-bold rounded-full hover:bg-gray-300 transition duration-300"
+                className="px-8 py-3 text-white bg-gradient-to-r from-pink-500 to-red-400 font-semibold rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
               >
                 Sign Up Now
               </Link>
@@ -190,7 +193,7 @@ const LandingPage = () => {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">
-            Why Choose TourEase?
+            Why Choose EasyTrips?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-white rounded-lg shadow-md">

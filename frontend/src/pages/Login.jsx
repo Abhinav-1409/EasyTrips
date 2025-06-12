@@ -58,7 +58,7 @@ const Login = () => {
         // Use the login function from AuthContext
         login(data.user, data.user.token);
         setIsLoading(false);
-        navigate("/dashboard");
+        navigate("/");
       } catch (error) {
         console.error("Login error:", error);
         setIsLoading(false);
@@ -73,7 +73,7 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/dashboard");
+      navigate("/");
     }, 1000);
   };
 
