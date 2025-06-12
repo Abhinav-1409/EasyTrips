@@ -7,132 +7,25 @@ import Footer from "../components/Footer"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext"
+import { useNavigate } from "react-router-dom";
 
 const PackageDetails = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [packageData, setPackageData] = useState({})
 
-  // Mock package data
-  // const packageData = {
-  //   id: Number.parseInt(id),
-  //   name: "Swiss Alps Adventure",
-  //   images: [
-  //     "/placeholder.svg?height=400&width=600",
-  //     "/placeholder.svg?height=400&width=600",
-  //     "/placeholder.svg?height=400&width=600",
-  //     "/placeholder.svg?height=400&width=600",
-  //   ],
-  //   price: 1899,
-  //   duration: "8 days",
-  //   rating: 4.9,
-  //   reviewCount: 124,
-  //   groupSize: "4-12",
-  //   bestTime: "Jun-Sep",
-  //   description:
-  //     "Experience the breathtaking beauty of the Swiss Alps with our 8-day adventure package. Trek through stunning mountain landscapes, visit charming alpine villages, and enjoy the crisp mountain air. This tour combines outdoor activities with cultural experiences for an unforgettable Swiss vacation.",
-  //   highlights: [
-  //     "Guided hiking through scenic mountain trails",
-  //     "Cable car ride to Schilthorn summit",
-  //     "Visit to traditional Swiss chocolate factory",
-  //     "Boat cruise on Lake Lucerne",
-  //     "Explore the charming streets of Zermatt",
-  //     "Optional paragliding experience (additional cost)",
-  //   ],
-  //   itinerary: [
-  //     {
-  //       day: 1,
-  //       title: "Arrival in Zurich",
-  //       description:
-  //         "Arrive at Zurich Airport and transfer to your hotel. Meet your guide and fellow travelers for a welcome dinner and briefing about the adventure ahead.",
-  //     },
-  //     {
-  //       day: 2,
-  //       title: "Lucerne Exploration",
-  //       description:
-  //         "Travel to Lucerne and explore this beautiful lakeside city. Visit the Chapel Bridge, Lion Monument, and enjoy a boat cruise on Lake Lucerne.",
-  //     },
-  //     {
-  //       day: 3,
-  //       title: "Mount Pilatus",
-  //       description:
-  //         "Experience the Golden Round Trip to Mount Pilatus, including a cogwheel railway ride up the mountain and panoramic gondola descent. Enjoy breathtaking views of the Alps.",
-  //     },
-  //     {
-  //       day: 4,
-  //       title: "Interlaken & Thun",
-  //       description:
-  //         "Travel to Interlaken, situated between two lakes. Visit Thun Castle and enjoy free time to explore or opt for adventure activities like paragliding.",
-  //     },
-  //     {
-  //       day: 5,
-  //       title: "Jungfraujoch Excursion",
-  //       description:
-  //         "Journey to Jungfraujoch, the 'Top of Europe,' via scenic train ride. Explore the Ice Palace, Sphinx Observatory, and enjoy snow activities on the glacier.",
-  //     },
-  //     {
-  //       day: 6,
-  //       title: "Zermatt & Matterhorn",
-  //       description:
-  //         "Travel to Zermatt, a car-free village at the foot of the Matterhorn. Take the Gornergrat railway for spectacular views of the iconic mountain.",
-  //     },
-  //     {
-  //       day: 7,
-  //       title: "Chocolate & Cheese",
-  //       description:
-  //         "Visit a traditional Swiss chocolate factory and cheese dairy. Learn about the production processes and enjoy tastings. Farewell dinner in the evening.",
-  //     },
-  //     {
-  //       day: 8,
-  //       title: "Departure",
-  //       description: "Transfer to Zurich Airport for your departure flight. End of services.",
-  //     },
-  //   ],
-  //   included: [
-  //     "7 nights accommodation in 3-4 star hotels",
-  //     "Daily breakfast and 3 dinners",
-  //     "All transportation within Switzerland",
-  //     "English-speaking guide throughout",
-  //     "All activities and entrance fees as per itinerary",
-  //     "Airport transfers on arrival and departure",
-  //   ],
-  //   notIncluded: [
-  //     "International flights",
-  //     "Travel insurance",
-  //     "Optional activities",
-  //     "Meals not mentioned in the itinerary",
-  //     "Personal expenses and gratuities",
-  //   ],
-  //   reviews: [
-  //     {
-  //       id: 1,
-  //       name: "Sarah Johnson",
-  //       rating: 5,
-  //       date: "2023-06-15",
-  //       comment:
-  //         "This was the trip of a lifetime! The Swiss Alps are even more beautiful than I imagined. Our guide was knowledgeable and the itinerary was perfect - a great mix of activities and free time. Highly recommend!",
-  //       image: "/placeholder.svg?height=60&width=60",
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "Michael Chen",
-  //       rating: 5,
-  //       date: "2023-05-22",
-  //       comment:
-  //         "Excellent tour from start to finish. The accommodations were comfortable, the transportation was seamless, and the views were spectacular. The Jungfraujoch excursion was definitely the highlight!",
-  //       image: "/placeholder.svg?height=60&width=60",
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "Emily Rodriguez",
-  //       rating: 4,
-  //       date: "2023-04-10",
-  //       comment:
-  //         "Great experience overall. The itinerary was well-planned and our guide was fantastic. The only reason I'm giving 4 stars instead of 5 is that some of the hotels were a bit basic. But the experiences more than made up for it!",
-  //       image: "/placeholder.svg?height=60&width=60",
-  //     },
-  //   ],
-  // }
+  const editPackage = () => {
+    navigate('/add-destination',
+      {
+        state: {
+          newEntry : false,
+          ...packageData
+        }
+      }
+    );
+  };
+
   useEffect(() => {
     const fetchPackageData = async () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/destination/${id}`, {
@@ -149,7 +42,7 @@ const PackageDetails = () => {
     }
     fetchPackageData();
     // setPackageData(data.destination);
-  }, [id,user])
+  }, [id, user])
 
   // State for active image
   const [activeImage, setActiveImage] = useState(0)
@@ -589,31 +482,12 @@ const PackageDetails = () => {
                           </span>
                         </button>
 
-                        {/* <button
-                          onClick={toggleSaved}
-                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 ₹{
-                            isInSaved
-                              ? "bg-blue-50 text-blue-600 border-blue-600"
-                              : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }`}
+                        {role === "Admin" && <button
+                          onClick={editPackage}
+                          className={`flex-1 px-4 py-2 border rounded-md text-center font-medium transition duration-300 border-gray-300 text-gray-700 hover:bg-gray-50`}
                         >
-                          <span className="flex items-center justify-center">
-                            <svg
-                              className="w-5 h-5 mr-1"
-                              fill={isInSaved ? "currentColor" : "none"}
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                              />
-                            </svg>
-                            Save
-                          </span>
-                        </button> */}
+                          Edit
+                        </button>}
                       </div>
                     </div>
                   </div>

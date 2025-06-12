@@ -336,7 +336,7 @@ exports.handleAddDestination = async (req, res) => {
       day: item.day,
       activities: item.activities,
     }));
-
+    // console.log("tourOperator", tourOperator, typeof tourOperator);
     // FIXED: Properly await and destructure image URLs
     const { urls: imageUrls } = await exports.handleImageUpload(images, name);
 
@@ -361,7 +361,7 @@ exports.handleAddDestination = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Destination added successfully",
-      destination: destinationData,
+      destination: destinationData._id,
     });
   } catch (error) {
     console.error("Error adding destination:", error);
@@ -372,6 +372,128 @@ exports.handleAddDestination = async (req, res) => {
     });
   }
 };
+
+exports.handleUpdateDestination = async (req, res) => {
+  const destinationId = req.params.id;
+  const {
+    name,
+    description,
+    bestTimeToVisit,
+    groupSize,
+    duration,
+    location,
+    price,
+    availability,
+    cancellationPolicy,
+    termsAndConditions,
+  } = req.body;
+
+  // For simple arrays sent as multiple field[] entries
+  const highlights = Array.isArray(req.body.highlights)
+    ? req.body.highlights
+    : [req.body.highlights].filter(Boolean);
+
+  const existingImages = Array.isArray(req.body.existingImages)
+    ? req.body.existingImages
+    : [req.body.existingImages].filter(Boolean);
+
+  const whatIncluded = Array.isArray(req.body.whatIncluded)
+    ? req.body.whatIncluded
+    : [req.body.whatIncluded].filter(Boolean);
+
+  const whatNotIncluded = Array.isArray(req.body.whatNotIncluded)
+    ? req.body.whatNotIncluded
+    : [req.body.whatNotIncluded].filter(Boolean);
+
+  // For arrays of objects sent as JSON strings
+  let itinerary = [];
+  if (Array.isArray(req.body.itinerary)) {
+    itinerary = req.body.itinerary.map((item) => {
+      try {
+        return JSON.parse(item);
+      } catch {
+        return {};
+      }
+    });
+  } else if (req.body.itinerary) {
+    try {
+      itinerary = [JSON.parse(req.body.itinerary)];
+    } catch {
+      itinerary = [];
+    }
+  }
+
+  let tourOperator = [];
+  if (Array.isArray(req.body.tourOperator)) {
+    tourOperator = req.body.tourOperator.map((item) => {
+      try {
+        return JSON.parse(item);
+      } catch {
+        return {};
+      }
+    });
+  } else if (req.body.tourOperator) {
+    try {
+      tourOperator = [JSON.parse(req.body.tourOperator)];
+    } catch {
+      tourOperator = [];
+    }
+  }
+
+  const images = req.files;
+  const itineraryObject = itinerary.map((item) => ({
+    day: item.day,
+    activities: item.activities,
+  }));
+
+  // FIXED: Properly await and destructure image URLs
+  let { urls: imageUrls } = await exports.handleImageUpload(images, name);
+  console.log("Image URLs:", existingImages);
+  imageUrls = [...existingImages, ...imageUrls].filter(Boolean); // Combine existing and new images, removing any empty value
+
+  try {
+    // console.log("tourOperator", tourOperator, typeof tourOperator);
+    const updatedDestination = await Destination.updateOne(
+      {_id: destinationId},
+      {
+        name,
+        description,
+        highlights,
+        bestTimeToVisit,
+        groupSize,
+        duration,
+        location,
+        imageUrl: imageUrls, // <-- match your schema!
+        price,
+        availability,
+        itinerary: itineraryObject,
+        included: whatIncluded,
+        notIncluded: whatNotIncluded,
+        cancellationPolicy,
+        termsAndConditions,
+        tourOperator,
+      },
+      { new: true, upsert: true }
+    );
+    if (!updatedDestination) {
+      return res.status(404).json({ message: "Destination not found" });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Destination updated successfully",
+      destination: updatedDestination._id,
+    });
+  } catch (error) {
+    console.error("Error updating destination:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating destination",
+      error: error.message,
+    });
+    return;
+  }
+};
+
 exports.handleGetDestinations = async (req, res) => {
   try {
     const destinations = await Destination.find();
@@ -454,12 +576,10 @@ exports.handleRemoveFromWishlist = async (req, res) => {
       { $pull: { wishlistedBy: user._id } },
       { new: true, upsert: true }
     );
-    res
-      .status(200)
-      .json({
-        isInWishlist: false,
-        message: "Removed from wishlist successfully",
-      });
+    res.status(200).json({
+      isInWishlist: false,
+      message: "Removed from wishlist successfully",
+    });
   } catch (error) {
     console.error("Error adding to wishlist:", error);
     res.status(500).json({
@@ -476,14 +596,14 @@ exports.handleGetWishlist = async (req, res) => {
   const user = jwt.verify(token, process.env.JWT_SECRET);
   try {
     const destinations = await Destination.find({
-      wishlistedBy: user._id});
-      // console.log("Destinations in wishlist:", destinations);
+      wishlistedBy: user._id,
+    });
+    // console.log("Destinations in wishlist:", destinations);
     if (!destinations || destinations.length === 0) {
       return res.status(404).json({ message: "No wishlist items found" });
     }
     res.status(200).json({ wishlistItems: destinations });
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching wishlist items:", error);
     res.status(500).json({
       success: false,

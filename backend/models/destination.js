@@ -118,7 +118,7 @@ const destinationSchema = new mongoose.Schema({
    tourOperator: [{
       type: {
          name: String,
-         phone: String,
+         mobile: String,
          email: String,
       },
       required: true,
